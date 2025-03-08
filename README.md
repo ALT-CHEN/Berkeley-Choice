@@ -20,6 +20,11 @@ A Flask-based web application that recommends courses based on user skills. This
 │── config.py            # Configuration settings (auto-generates secret key)
 │── requirements.txt     # Dependencies
 │── README.md            # Project documentation
+│── /templates/          # HTML 
+│   │── base.html
+│   │── home.html
+│   │── about.html
+│   │── recommend.html
 │── /routes/             # Route definitions
 │   │── __init__.py
 │   │── home.py          # Home page routes
@@ -53,8 +58,6 @@ python -m venv env
 ```sh
 pip install -r requirements.txt
 ```
-
-Visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
 ---
 

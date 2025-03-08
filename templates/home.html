@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}
+    Home Page
+{% endblock %}
+{% block body %}
+    <!-- Hero Section -->
+    <section class="text-center p-5 text-white" style="background: linear-gradient(45deg, #f3b304, #2a5298);">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Find the Perfect Course for You</h1>
+            <p class="lead">Berkeley Choice uses AI to recommend the best courses based on your skills and career goals.</p>
+            <a href="/recommend" class="btn btn-primary btn-lg mt-3">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Main Content Container (Light Contrast) -->
+    <section class="container my-5 p-4 rounded" style="background-color: #f8f9fa; color: #333;">
+        <h2 class="fw-bold text-center">Why Choose Berkeley Choice?</h2>
+        <div class="row mt-4 text-center">
+            <div class="col-md-4">
+                <i class="fas fa-brain fa-3x text-primary"></i>
+                <h4 class="mt-3">AI-Powered Recommendations</h4>
+                <p>Get personalized course recommendations based on your skills.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-chart-bar fa-3x text-success"></i>
+                <h4 class="mt-3">Interactive Insights</h4>
+                <p>Visualize course trends and required skills in our dashboard.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-graduation-cap fa-3x text-warning"></i>
+                <h4 class="mt-3">Learn from the Best</h4>
+                <p>Explore top-rated courses at UC Berkeley.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step-by-Step Section (Darker Background) -->
+    <section class="text-white p-5" style="background-color: #232323;">
+        <div class="container text-center">
+            <h2 class="fw-bold">How It Works</h2>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <span class="badge bg-primary p-3 fs-5">1</span>
+                    <h5 class="mt-3">Upload Your Resume</h5>
+                    <p>Provide details about your skills and experience.</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="badge bg-success p-3 fs-5">2</span>
+                    <h5 class="mt-3">AI Matches Courses</h5>
+                    <p>Our system finds the best courses for you.</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="badge bg-warning p-3 fs-5">3</span>
+                    <h5 class="mt-3">Get Personalized Results</h5>
+                    <p>View your recommended courses and enroll easily.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call-to-Action (Blue Theme for Engagement) -->
+    <section class="text-center p-5 text-white" style="background: #2a5298;">
+        <h2 class="fw-bold">Ready to Find Your Perfect Course?</h2>
+        <p class="lead">Discover the best courses tailored to your skills and career goals.</p>
+        <a href="/recommend" class="btn btn-warning btn-lg mt-3">Get Your Recommendations</a>
+    </section>
+
+
+{% endblock %}
