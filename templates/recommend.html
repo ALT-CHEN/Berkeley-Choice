@@ -1,52 +1,183 @@
 {% extends 'base.html' %}
+
 {% block title %}
     Recommend Page
 {% endblock %}
+
+{% block head %}
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
 {% block body %}
-    <section class="text-center p-5 text-white" style="background: linear-gradient(45deg, #1e3c72, #2a5298);">
-        <div class="container">
-            <h1 class="display-4 fw-bold">Get Your Personalized Course Recommendations</h1>
-            <p class="lead">Answer a few questions and upload your resume to receive AI-powered course recommendations.</p>
-        </div>
-    </section>
-
+<section class="text-center p-5 text-white" style="background: linear-gradient(45deg, #1e3c72, #2a5298);">
     <div class="container">
-        <form id="recommendationForm" method="POST" action="/recommend" enctype="multipart/form-data">
-            <!-- User Input Fields -->
-            <div class="mb-3">
-                <label class="form-label">What is your current field of study or work?</label>
-                <input type="text" class="form-control" name="field" placeholder="e.g., Data Science, Software Engineering" required>
-            </div>
-        
-            <div class="mb-3">
-                <label class="form-label">What are your career goals?</label>
-                <input type="text" class="form-control" name="career_goal" placeholder="e.g., Become a Machine Learning Engineer" required>
-            </div>
-        
-            <div class="mb-3">
-                <label class="form-label">Preferred learning style?</label>
-                <select class="form-select" name="learning_style" required>
-                    <option value="self-paced">Self-Paced</option>
-                    <option value="structured">Structured with deadlines</option>
-                    <option value="hands-on">Hands-on project-based</option>
-                </select>
-            </div>
-        
-            <!-- Resume Upload -->
-            <div class="mb-3">
-                <label class="form-label">Upload Your Resume (PDF)</label>
-                <input type="file" class="form-control" name="resume" accept="application/pdf" required>
-            </div>
-        
-            <button type="submit" class="btn btn-primary">Get Recommendations</button>
-        </form>
+        <h1 class="display-4 fw-bold">Get Your Personalized Course Recommendations</h1>
+        <p class="lead">Answer a few questions and upload your resume to receive AI-powered course recommendations.</p>
     </div>
-    
-    
-    </section>
-    
-    
-    
-            
+</section>
 
+<div class="container my-5">
+    <form id="recommendationForm" method="POST" action="/recommend" enctype="multipart/form-data">
+
+        <!-- Degree Dropdown -->
+        <div class="mb-3">
+            <label class="form-label">What is your highest degree?</label>
+            <select class="form-select select2" name="degree_names" required>
+                <option value="">Select your degree</option>
+                {% for degree in degree_options %}
+                    <option value="{{ degree }}">{{ degree }}</option>
+                {% endfor %}
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <!-- Language Dropdown -->
+        <div class="mb-3">
+            <label class="form-label">What foreign language do you speak, besides English?</label>
+            <select class="form-select select2" name="language" required>
+                <option value="">Select a language</option>
+                {% for language in language_options %}
+                    <option value="{{ language }}">{{ language }}</option>
+                {% endfor %}
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <!-- Insitution Count -->   
+        <div class="mb-3">
+            <label class="form-label">How many academic institutions have you attended?</label>
+            <input type="number" class="form-control" name="institution_count"
+                   min="0" placeholder="e.g., 1, 2, 3..." required>
+        </div>
+
+        <!-- Max Passing Year -->   
+        <div class="mb-3">
+            <label class="form-label">Enter the year you completed your most recent degree:</label>
+            <input type="number" class="form-control" name="max_passing_year"
+                   min="1900" max="2100" placeholder="e.g., 2023" required>
+        </div>
+
+        <!-- GPA -->
+        <div class="mb-3">
+            <label class="form-label">What is your GPA?</label>
+            <input type="number" step="0.01" min="0" max="4.0"
+                   class="form-control" name="gpa"
+                   placeholder="e.g., 3.75">
+        </div>
+
+        <!-- Experience -->
+        <div class="mb-3">
+            <label class="form-label">How many years of work experience do you have?</label>
+            <input type="number" class="form-control" name="experience"
+                   min="0" placeholder="e.g., 3">
+        </div>
+
+        <!-- AGE -->
+        <div class="mb-3">
+            <label class="form-label">What is your age?</label>
+            <input type="number" class="form-control" name="age"
+                   min="0" max="120" placeholder="e.g., 25">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Have you participated in extracurricular activities?</label>
+            <select class="form-select" name="extra_curricular" required>
+                <option value="">Select one</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Do you have any certifications?</label>
+            <select class="form-select" name="certification" required>
+                <option value="">Select one</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>       
+        
+
+        <!-- Major 1 Dropdown -->
+        <div class="mb-3">
+            <label class="form-label">What is your primary major?</label>
+            <select class="form-select select2" name="major1_mapped" required>
+                <option value="">Select your major</option>
+                {% for major in major1_options %}
+                    <option value="{{ major }}">{{ major }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Major 2 Dropdown -->
+        <div class="mb-3">
+            <label class="form-label">What is your secondary major?</label>
+            <select class="form-select select2" name="major2_mapped" required>
+                <option value="">Select your major</option>
+                {% for major in major2_options %}
+                    <option value="{{ major }}">{{ major }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Most recent job title</label>
+            <select class="form-select select2" name="job1">
+                <option value="">Select a job title</option>
+                {% for job in job1_options %}
+                    <option value="{{ job }}">{{ job }}</option>
+                {% endfor %}
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Second previous job title (optional)</label>
+            <select class="form-select select2" name="job2">
+                <option value="">Select a job title</option>
+                {% for job in job2_options %}
+                    <option value="{{ job }}">{{ job }}</option>
+                {% endfor %}
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Third previous job title (optional)</label>
+            <select class="form-select select2" name="job3">
+                <option value="">Select a job title</option>
+                {% for job in job3_options %}
+                    <option value="{{ job }}">{{ job }}</option>
+                {% endfor %}
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+
+        <!-- Resume Upload -->
+        <div class="mb-3">
+            <label class="form-label">Upload Your Resume (PDF)</label>
+            <input type="file" class="form-control" name="resume" accept="application/pdf" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Get Recommendations</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- jQuery and Select2 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Initialize Select2 -->
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select or search...",
+                allowClear: true
+            });
+        });
+    </script>
 {% endblock %}
