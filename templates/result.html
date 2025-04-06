@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Recommendations{% endblock %}
+
+{% block body %}
+
+<!-- 🟡 Hero Section -->
+<section class="text-center py-5" style="background: linear-gradient(90deg, #facc15, #f59e0b); color: #1f2937;">
+  <div class="container">
+    <h1 class="display-5 fw-bold">Your Recommended Courses</h1>
+    <p class="lead mb-0">Tailored to match your background, skills, and interests.</p>
+  </div>
+</section>
+
+<!-- 🔵 Result Cards -->
+<div class="container py-5" id="recommendation-container">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="card-grid">
+    {% for course in recommendations %}
+    <div class="col course-card d-none">
+      <div class="card bg-dark text-light border border-secondary rounded-3 h-100">
+        <div class="card-body">
+          <h5 class="card-title text-warning mb-2">{{ course.code }} – {{ course.name }}</h5>
+          <div class="mb-2">
+            <small class="text-muted">Match Score</small>
+            <div class="progress" style="height: 6px;">
+              <div class="progress-bar bg-info" role="progressbar" style="width: {{ course.score }}%;" aria-valuenow="{{ course.score }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <span class="small">{{ course.score }}%</span>
+          </div>
+          {% if course.skills %}
+          <div class="mt-2">
+            {% for skill in course.skills %}
+            <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if course.reason %}
+          <div class="mt-3 small text-muted fst-italic">
+            {{ course.reason }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-footer bg-transparent border-0">
+          <a href="#" class="btn btn-outline-light w-100">View Details</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Show More Button -->
+  <div class="text-center mt-4">
+    <button class="btn btn-warning px-4 py-2 fw-bold" id="showMoreBtn">Show More</button>
+  </div>
+</div>
+
+<!-- ⚙️ Script to show 9 at a time -->
+<script>
+  const cards = document.querySelectorAll('.course-card');
+  const showMoreBtn = document.getElementById('showMoreBtn');
+  const cardsPerLoad = 9;
+  let currentIndex = 0;
+
+  function showNextBatch() {
+    const start = currentIndex;
+    const end = currentIndex + cardsPerLoad;
+
+    for (let i = start; i < end && i < cards.length; i++) {
+      cards[i].classList.remove('d-none');
+    }
+
+    if (end >= cards.length) {
+      showMoreBtn.style.display = 'none';
+    }
+
+    currentIndex = end;
+
+    // Scroll to the first newly shown card
+    if (cards[start]) {
+      cards[start].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // Show the initial batch
+  showNextBatch();
+
+  // Click handler
+  showMoreBtn.addEventListener('click', showNextBatch);
+</script>
+
+<!-- 🖌️ Optional Styling -->
+<style>
+body {
+  background-color: #0f172a;
+}
+
+.card {
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.btn-outline-light:hover {
+  background-color: #facc15;
+  color: #1f2937;
+  border-color: #facc15;
+}
+</style>
+
+{% endblock %}

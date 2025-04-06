@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session, redirect, url_for
 import pandas as pd
 import os
 
@@ -24,15 +24,14 @@ def recommend():
 
 
     if request.method == "POST":
-        # Extract user inputs
-        field = request.form.get("field")
-        career_goal = request.form.get("career_goal")
-        learning_style = request.form.get("learning_style")
-        resume = request.files["resume"]
+        form_data = request.form.to_dict()
+        resume_file = request.files.get('resume')
 
-        # Save resume file
-        if resume.filename != "":
-            pass
+        # Store in session (optional; better for prototyping)
+        session['form_data'] = form_data
+        session['resume_filename'] = resume_file.filename if resume_file else None
+
+        return redirect(url_for('recommendation.result'))
         
 
     return render_template("recommend.html",
@@ -45,3 +44,46 @@ def recommend():
                        job3_options=job3_options,
                        min_inst=min_inst,
                        max_inst=max_inst)
+
+@recommendation_bp.route("/result", methods=["GET"])
+def result():
+    form_data = session.get('form_data', {})
+    resume_filename = session.get('resume_filename', '')
+
+    # 🧠 Here you can call your recommendation model using form_data and resume
+
+    recommended_courses = [
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        {"code": "CS 188", "name": "Intro to AI", "score": 99},
+        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
+        # ... More mock or real data
+    ]
+
+    return render_template("result.html", recommendations=recommended_courses, user_data=form_data)

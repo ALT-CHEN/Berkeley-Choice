@@ -1,183 +1,319 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Recommend Page
-{% endblock %}
-
-{% block head %}
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  Recommend Page
 {% endblock %}
 
 {% block body %}
-<section class="text-center p-5 text-white" style="background: linear-gradient(45deg, #1e3c72, #2a5298);">
-    <div class="container">
-        <h1 class="display-4 fw-bold">Get Your Personalized Course Recommendations</h1>
-        <p class="lead">Answer a few questions and upload your resume to receive AI-powered course recommendations.</p>
-    </div>
+<section class="text-center p-5 text-white" style="background: linear-gradient(45deg, #f8a304, #ffbb00);">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Get Your Personalized Course Recommendations</h1>
+    <p class="lead">Answer a few questions and upload your resume to receive AI-powered course recommendations.</p>
+  </div>
 </section>
 
 <div class="container my-5">
-    <form id="recommendationForm" method="POST" action="/recommend" enctype="multipart/form-data">
 
-        <!-- Degree Dropdown -->
-        <div class="mb-3">
-            <label class="form-label">What is your highest degree?</label>
-            <select class="form-select select2" name="degree_names" required>
-                <option value="">Select your degree</option>
-                {% for degree in degree_options %}
-                    <option value="{{ degree }}">{{ degree }}</option>
-                {% endfor %}
-                <option value="Other">Other</option>
-            </select>
-        </div>
+  <!-- 🔷 Stepper Phase Bar -->
+  <div class="stepper mb-5 d-flex justify-content-between position-relative">
+    {% for i in range(1, 6) %}
+    <div class="step text-center flex-fill" id="step-{{ i }}">
+      <div class="circle">{{ i }}</div>
+      <div class="label">
+        {% if i == 1 %}Academics{% elif i == 2 %}Work{% elif i == 3 %}Other{% elif i == 4 %}Resume{% else %}Review{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 
-        <!-- Language Dropdown -->
-        <div class="mb-3">
-            <label class="form-label">What foreign language do you speak, besides English?</label>
-            <select class="form-select select2" name="language" required>
-                <option value="">Select a language</option>
-                {% for language in language_options %}
-                    <option value="{{ language }}">{{ language }}</option>
-                {% endfor %}
-                <option value="Other">Other</option>
-            </select>
-        </div>
+  <!-- 🧾 Multi-Step Form -->
+  <form id="multiStepForm" class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="{{ url_for('recommendation.recommend') }}">
 
-        <!-- Insitution Count -->   
+    <!-- STEP 1 -->
+    <div class="form-step">
         <div class="mb-3">
-            <label class="form-label">How many academic institutions have you attended?</label>
-            <input type="number" class="form-control" name="institution_count"
-                   min="0" placeholder="e.g., 1, 2, 3..." required>
+          <label class="form-label">Degree</label>
+          <select class="form-select" name="degree_names">
+            <option value="">Select your degree</option>
+            {% for degree in degree_options %}
+              <option value="{{ degree }}">{{ degree }}</option>
+            {% endfor %}
+          </select>
         </div>
+      
+        <div class="mb-3">
+          <label class="form-label">Major 1</label>
+          <select class="form-select" name="major1_mapped">
+            <option value="">Select your major</option>
+            {% for major in major1_options %}
+              <option value="{{ major }}">{{ major }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      
+        <div class="mb-3">
+          <label class="form-label">Major 2</label>
+          <select class="form-select" name="major2_mapped" >
+            <option value="">Select your major</option>
+            {% for major in major2_options %}
+              <option value="{{ major }}">{{ major }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      
+        <!-- 📌 Inline Row with GPA, Institutions, Graduation Year -->
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label">GPA</label>
+            <input type="number" step="0.01" min="0" max="4.0" class="form-control" name="gpa" >
+          </div>
+      
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Institutions Attended</label>
+            <input type="number" class="form-control" name="institution_count" min="0" >
+          </div>
+      
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Year of Graduation</label>
+            <input type="number" class="form-control" name="max_passing_year" min="1900" max="2100" >
+          </div>
+        </div>
+    </div>
+      
 
-        <!-- Max Passing Year -->   
-        <div class="mb-3">
-            <label class="form-label">Enter the year you completed your most recent degree:</label>
-            <input type="number" class="form-control" name="max_passing_year"
-                   min="1900" max="2100" placeholder="e.g., 2023" required>
-        </div>
+    <!-- STEP 2 -->
+    <div class="form-step d-none">
+      <div class="mb-3">
+        <label class="form-label">Years of work experience</label>
+        <input type="number" class="form-control" name="experience" min="0" >
+      </div>
 
-        <!-- GPA -->
-        <div class="mb-3">
-            <label class="form-label">What is your GPA?</label>
-            <input type="number" step="0.01" min="0" max="4.0"
-                   class="form-control" name="gpa"
-                   placeholder="e.g., 3.75">
-        </div>
+      {% for job_label, job_list in [('job1', job1_options), ('job2', job2_options), ('job3', job3_options)] %}
+      <div class="mb-3">
+        <label class="form-label">{{ job_label.replace('job', 'Job ') }}</label>
+        <select class="form-select" name="{{ job_label }}">
+          <option value="">Select a job title</option>
+          {% for job in job_list %}
+            <option value="{{ job }}">{{ job }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endfor %}
 
-        <!-- Experience -->
-        <div class="mb-3">
-            <label class="form-label">How many years of work experience do you have?</label>
-            <input type="number" class="form-control" name="experience"
-                   min="0" placeholder="e.g., 3">
-        </div>
+      
+    </div>
 
-        <!-- AGE -->
-        <div class="mb-3">
-            <label class="form-label">What is your age?</label>
-            <input type="number" class="form-control" name="age"
-                   min="0" max="120" placeholder="e.g., 25">
-        </div>
+    <!-- STEP 3 -->
+    <div class="form-step d-none">
 
-        <div class="mb-3">
-            <label class="form-label">Have you participated in extracurricular activities?</label>
-            <select class="form-select" name="extra_curricular" required>
-                <option value="">Select one</option>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </select>
-        </div>
-        
-        <div class="mb-3">
-            <label class="form-label">Do you have any certifications?</label>
-            <select class="form-select" name="certification" required>
-                <option value="">Select one</option>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </select>
-        </div>       
-        
+      <div class="mb-3">
+        <label class="form-label">Age</label>
+        <input type="number" class="form-control" name="age" min="0" max="120" >
+      </div>
 
-        <!-- Major 1 Dropdown -->
-        <div class="mb-3">
-            <label class="form-label">What is your primary major?</label>
-            <select class="form-select select2" name="major1_mapped" required>
-                <option value="">Select your major</option>
-                {% for major in major1_options %}
-                    <option value="{{ major }}">{{ major }}</option>
-                {% endfor %}
-            </select>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">Extracurricular Activities</label>
+        <select class="form-select" name="extra_curricular" >
+          <option value="">Select</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
 
-        <!-- Major 2 Dropdown -->
-        <div class="mb-3">
-            <label class="form-label">What is your secondary major?</label>
-            <select class="form-select select2" name="major2_mapped" required>
-                <option value="">Select your major</option>
-                {% for major in major2_options %}
-                    <option value="{{ major }}">{{ major }}</option>
-                {% endfor %}
-            </select>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">Certifications</label>
+        <select class="form-select" name="certification" >
+          <option value="">Select</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
 
-        <div class="mb-3">
-            <label class="form-label">Most recent job title</label>
-            <select class="form-select select2" name="job1">
-                <option value="">Select a job title</option>
-                {% for job in job1_options %}
-                    <option value="{{ job }}">{{ job }}</option>
-                {% endfor %}
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        
-        <div class="mb-3">
-            <label class="form-label">Second previous job title (optional)</label>
-            <select class="form-select select2" name="job2">
-                <option value="">Select a job title</option>
-                {% for job in job2_options %}
-                    <option value="{{ job }}">{{ job }}</option>
-                {% endfor %}
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        
-        <div class="mb-3">
-            <label class="form-label">Third previous job title (optional)</label>
-            <select class="form-select select2" name="job3">
-                <option value="">Select a job title</option>
-                {% for job in job3_options %}
-                    <option value="{{ job }}">{{ job }}</option>
-                {% endfor %}
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        
+      <div class="mb-3">
+        <label class="form-label">Foreign Language</label>
+        <select class="form-select" name="language">
+          <option value="">Select a language</option>
+          {% for language in language_options %}
+            <option value="{{ language }}">{{ language }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-        <!-- Resume Upload -->
-        <div class="mb-3">
-            <label class="form-label">Upload Your Resume (PDF)</label>
-            <input type="file" class="form-control" name="resume" accept="application/pdf" required>
-        </div>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Get Recommendations</button>
-    </form>
+    <!-- STEP 4 -->
+    <div class="form-step d-none">
+
+      <div class="mb-3">
+        <label class="form-label">Upload Resume (PDF)</label>
+        <input type="file" class="form-control" name="resume" accept="application/pdf">
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" >
+        <label class="form-check-label">Agree to terms and conditions</label>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="form-step d-none">
+      <h3 class="mb-3">Review Your Information</h3>
+      <div id="reviewSection" class="text-white"></div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+      <button type="button" id="prevBtn" class="btn btn-secondary" onclick="nextPrev(-1)">Previous</button>
+      <button type="button" id="nextBtn" class="btn btn-primary" onclick="nextPrev(1)">Next</button>
+    </div>
+
+  </form>
 </div>
-{% endblock %}
 
-{% block scripts %}
-    <!-- jQuery and Select2 JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- 🖌️ Stepper Styles -->
+<style>
+.stepper {
+  counter-reset: step;
+}
+.step {
+  position: relative;
+}
+.step .circle {
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  border-radius: 50%;
+  background: #6c757d;
+  color: white;
+  line-height: 40px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.step.active .circle {
+  background: #0d6efd;
+}
+.step.completed .circle {
+  background: #198754;
+}
+.step::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  height: 4px;
+  width: 100%;
+  background: #6c757d;
+  z-index: -1;
+}
+.step:first-child::after {
+  display: none;
+}
+.step + .step::after {
+  left: -50%;
+}
+.label {
+  margin-top: 8px;
+  font-size: 0.875rem;
+}
+</style>
 
-    <!-- Initialize Select2 -->
-    <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: "Select or search...",
-                allowClear: true
-            });
-        });
-    </script>
+<!-- 🔁 Stepper Logic -->
+<script>
+  const formSteps = document.querySelectorAll('.form-step');
+  const stepperSteps = document.querySelectorAll('.step');
+  let currentStep = 0;
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+
+  function showStep(n) {
+    formSteps.forEach((step, i) => {
+      step.classList.toggle('d-none', i !== n);
+      stepperSteps[i].classList.remove('active', 'completed');
+      if (i < n) stepperSteps[i].classList.add('completed');
+      if (i === n) stepperSteps[i].classList.add('active');
+    });
+
+    prevBtn.style.display = n === 0 ? 'none' : 'inline-block';
+    nextBtn.innerText = n === formSteps.length - 1 ? 'Submit' : 'Next';
+
+    if (n === formSteps.length - 1) populateReview();
+  }
+
+  function nextPrev(n) {
+    if (n === 1 && !validateForm()) return;
+
+    if (currentStep === formSteps.length - 1 && n === 1) {
+      document.getElementById('multiStepForm').submit();
+      return;
+    }
+
+    currentStep += n;
+    showStep(currentStep);
+  }
+
+  function validateForm() {
+    const fields = formSteps[currentStep].querySelectorAll('input, select');
+    let valid = true;
+    fields.forEach(field => {
+      if (!field.checkValidity()) {
+        field.classList.add('is-invalid');
+        valid = false;
+      } else {
+        field.classList.remove('is-invalid');
+      }
+    });
+    return valid;
+  }
+
+  function populateReview() {
+    const formData = new FormData(document.getElementById('multiStepForm'));
+    let html = '<ul class="list-group">';
+
+    const booleanFields = ['extra_curricular', 'certification'];
+
+    const labelMap = {
+        degree_names: 'Degree',
+        major1_mapped: 'Major 1',
+        major2_mapped: 'Major 2',
+        gpa: 'GPA',
+        institution_count: 'Institutions Attended',
+        max_passing_year: 'Graduation Year',
+        experience: 'Years of Work Experience',
+        job1: 'Job 1',
+        job2: 'Job 2',
+        job3: 'Job 3',
+        age: 'Age',
+        extra_curricular: 'Extracurricular Activities',
+        certification: 'Certifications',
+        language: 'Foreign Language',
+        resume: 'Resume'
+    };
+
+    for (let [key, value] of formData.entries()) {
+        let displayValue = value;
+
+        // Handle boolean yes/no fields
+        if (booleanFields.includes(key)) {
+        displayValue = value === '1' ? 'Yes' : value === '0' ? 'No' : '';
+        }
+
+        // Handle resume file
+        if (key === 'resume') {
+        displayValue = value && value.name ? value.name : 'No submission';
+        }
+
+        const label = labelMap[key] || key.replaceAll('_', ' ').toUpperCase();
+
+        html += `<li class="list-group-item bg-dark text-light border-secondary">
+                <strong>${label}:</strong> ${displayValue}
+                </li>`;
+    }
+
+    html += '</ul>';
+    document.getElementById('reviewSection').innerHTML = html;
+  }
+
+
+  showStep(currentStep);
+</script>
 {% endblock %}
