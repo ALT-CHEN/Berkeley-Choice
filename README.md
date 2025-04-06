@@ -20,11 +20,14 @@ A Flask-based web application that recommends courses based on user skills. This
 │── config.py            # Configuration settings (auto-generates secret key)
 │── requirements.txt     # Dependencies
 │── README.md            # Project documentation
+│── /data/
+│   │── output.csv
 │── /templates/          # HTML 
 │   │── base.html
 │   │── home.html
 │   │── about.html
 │   │── recommend.html
+│   │── result.html
 │── /routes/             # Route definitions
 │   │── __init__.py
 │   │── home.py          # Home page routes
