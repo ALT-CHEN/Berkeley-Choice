@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
+from models.rse import extract_skills_from_resume
 import pandas as pd
 import os
 
@@ -27,6 +28,12 @@ def recommend():
         form_data = request.form.to_dict()
         resume_file = request.files.get('resume')
 
+        if resume_file:
+            upload_dir = os.path.join(BASE_DIR, 'uploads')
+            os.makedirs(upload_dir, exist_ok=True)
+            resume_path = os.path.join(upload_dir, resume_file.filename)
+            resume_file.save(resume_path)
+
         # Store in session (optional; better for prototyping)
         session['form_data'] = form_data
         session['resume_filename'] = resume_file.filename if resume_file else None
@@ -45,12 +52,24 @@ def recommend():
                        min_inst=min_inst,
                        max_inst=max_inst)
 
-@recommendation_bp.route("/result", methods=["GET"])
+@recommendation_bp.route("/recommend/result", methods=["GET"])
 def result():
     form_data = session.get('form_data', {})
     resume_filename = session.get('resume_filename', '')
 
-    # 🧠 Here you can call your recommendation model using form_data and resume
+    extracted_skills = []
+
+    if resume_filename:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        resume_path = os.path.join(BASE_DIR, 'uploads', resume_filename)
+
+        # Check if file exists before calling the function
+        if os.path.exists(resume_path):
+            _, extracted_skills = extract_skills_from_resume(resume_path)
+        else:
+            extracted_skills = ["⚠️ Resume file not found."]
+
+    
 
     recommended_courses = [
         {"code": "CS 188", "name": "Intro to AI", "score": 99},
@@ -86,4 +105,8 @@ def result():
         # ... More mock or real data
     ]
 
-    return render_template("result.html", recommendations=recommended_courses, user_data=form_data)
+    return render_template(
+        "result.html",
+        recommendations=recommended_courses,
+        user_data=form_data,
+        extracted_skills=extracted_skills)
