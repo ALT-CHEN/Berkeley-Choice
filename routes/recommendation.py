@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from models.rse import extract_skills_from_resume
+from models.ml import generate_fake_recommendations
 import pandas as pd
 import os
 
@@ -69,41 +70,8 @@ def result():
         else:
             extracted_skills = ["⚠️ Resume file not found."]
 
+    recommended_courses = generate_fake_recommendations()
     
-
-    recommended_courses = [
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        {"code": "CS 188", "name": "Intro to AI", "score": 99},
-        {"code": "IEOR 142", "name": "Supply Chain Analytics", "score": 98},
-        # ... More mock or real data
-    ]
 
     return render_template(
         "result.html",
