@@ -22,6 +22,11 @@ A Flask-based web application that recommends courses based on user skills. This
 │── README.md            # Project documentation
 │── /data/
 │   │── output.csv
+│   │── courses.csv
+│── /models/             # Machine Learning Models
+│   │── __init__.py
+│   │── ml.py            # recommendation models
+│   │── rse.py           # resume skills extractor
 │── /templates/          # HTML 
 │   │── base.html
 │   │── home.html
