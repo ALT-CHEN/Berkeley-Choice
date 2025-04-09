@@ -237,6 +237,7 @@
     nextBtn.innerText = n === formSteps.length - 1 ? 'Submit' : 'Next';
 
     if (n === formSteps.length - 1) populateReview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function nextPrev(n) {

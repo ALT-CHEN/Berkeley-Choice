@@ -2,95 +2,251 @@
 {% block title %}Recommendations{% endblock %}
 
 {% block body %}
+<style>
+  :root {
+    --hero-height: 150px;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* 🟡 Hero Section */
+  .hero-section {
+    height: var(--hero-height);
+    background: linear-gradient(90deg, #facc15, #f59e0b);
+    color: #1f2937;
+    padding: 2rem 1rem;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .hero-section h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .flex-main {
+    height: calc(100vh - var(--hero-height));
+    overflow: hidden;
+  }
+
+  .layout-container {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 2rem 1.5rem;
+    gap: 2rem;
+  }
+
+  .filter-panel {
+    width: 280px;
+    background-color: #1e293b;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    overflow-y: auto;
+    border: 1px solid #334155;
+    color: white;
+    flex-shrink: 0;
+    max-height: 100%;
+  }
+
+  .results-panel {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 1rem;
+  }
+
+  .card {
+    margin-bottom: 1.5rem;
+    background-color: #111827;
+    border: 1px solid #334155;
+    transition: transform 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .btn-outline-light:hover {
+    background-color: #facc15;
+    color: #1f2937;
+    border-color: #facc15;
+  }
+
+  .form-select {
+    background-color: #1e293b;
+    color: white;
+    border-color: #475569;
+  }
+
+  .form-select:focus {
+    border-color: #facc15;
+    box-shadow: 0 0 0 0.25rem rgba(250, 204, 21, 0.25);
+  }
+
+  .course-card {
+    width: 100%;
+  }
+
+  .results-panel::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .results-panel::-webkit-scrollbar-thumb {
+    background-color: #475569;
+    border-radius: 4px;
+  }
+
+  #no-results-msg {
+    font-size: 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .layout-container {
+      flex-direction: column;
+    }
+
+    .filter-panel {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .results-panel {
+      padding-right: 0;
+    }
+  }
+</style>
 
 <!-- 🟡 Hero Section -->
-<section class="text-center py-5" style="background: linear-gradient(90deg, #facc15, #f59e0b); color: #1f2937;">
+<section class="hero-section">
   <div class="container">
-    <h1 class="display-5 fw-bold">Your Recommended Courses</h1>
-    <p class="lead mb-0">Tailored to match your background, skills, and interests.</p>
+    <h1 class="display-5 fw-bold mb-2">🚀 Your Personalized Course Recommendations</h1>
+    <p class="lead" style="font-size: 1.2rem;">
+      Curated just for you based on your goals, background, and career path.
+    </p>
+    <div class="position-absolute top-0 end-0 opacity-25" style="font-size: 5rem; pointer-events: none; padding: 1rem;">
+      📚
+    </div>
   </div>
 </section>
 
-<!-- 🔵 Result Cards -->
-<div class="container py-5" id="recommendation-container">
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="card-grid">
-    {% for course in recommendations %}
-    <div class="col course-card d-none">
-      <div class="card bg-dark text-light border border-secondary rounded-3 h-100">
-        <div class="card-body">
-          <h5 class="card-title text-warning mb-2">{{ course.code }} – {{ course.title }}</h5>
-          <div class="mb-2">
-            <small class="text-muted">Match Score</small>
-            <span class="small">{{ course.match_score * 100 }}%</span>
+<!-- 📦 Main Flexible Section -->
+<main class="flex-main">
+  <div class="layout-container">
+    <!-- 🎛️ Filter Sidebar -->
+    <div class="filter-panel">
+      <h5 class="mb-4 text-warning">Filter Courses</h5>
+      <div class="mb-3">
+        <label class="form-label">Major</label>
+        <select class="form-select" id="filter-major">
+          <option value="">All</option>
+          <option value="CS">Computer Science</option>
+          <option value="EE">Electrical Engineering</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Grading Option</label>
+        <select class="form-select" id="filter-grading">
+          <option value="">All</option>
+          <option value="Letter">Letter</option>
+          <option value="P/NP">Pass/No Pass</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Level</label>
+        <select class="form-select" id="filter-level">
+          <option value="">All</option>
+          <option value="Undergraduate">Undergraduate</option>
+          <option value="Graduate">Graduate</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Summer</label>
+        <select class="form-select" id="filter-summer">
+          <option value="">All</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <button class="btn btn-outline-warning w-100 fw-bold" id="applyFilters">Apply Filters</button>
+      <button class="btn btn-outline-light mt-2 w-100 fw-bold" id="clearFilters">Clear Filters</button>
+    </div>
+
+    <!-- 📌 Scrollable Results Panel -->
+    <div class="results-panel">
+      <div id="card-grid">
+        {% for course in recommendations %}
+        <div class="course-card"
+             data-major="{{ course.major }}"
+             data-grading="{{ course.grading_option }}"
+             data-level="{{ course.level }}"
+             data-summer="{{ course.summer }}">
+          <div class="card text-light rounded-3">
+            <div class="card-body">
+              <h5 class="card-title text-warning mb-2">{{ course.code }} – {{ course.title }}</h5>
+              <div class="mb-2">
+                <small class="text-muted">Match Score</small>
+                <span class="small">{{ course.match_score * 100 }}%</span>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+              <a href="{{ course.url }}" target="_blank" class="btn btn-outline-light w-100">View Details</a>
+            </div>
           </div>
         </div>
-        <div class="card-footer bg-transparent border-0">
-          <a href="{{ course.url }}" target="_blank" class="btn btn-outline-light w-100">View Details</a>
-        </div>
+        {% endfor %}
       </div>
+      <p id="no-results-msg" class="text-center text-warning mt-5 fw-semibold">
+        🚫 No matching courses found.
+      </p>
     </div>
-    {% endfor %}
   </div>
+</main>
 
-  <!-- Show More Button -->
-  <div class="text-center mt-4">
-    <button class="btn btn-warning px-4 py-2 fw-bold" id="showMoreBtn">Show More</button>
-  </div>
-</div>
-
-<!-- ⚙️ Script to show 9 at a time -->
+<!-- 🔁 Script -->
 <script>
   const cards = document.querySelectorAll('.course-card');
-  const showMoreBtn = document.getElementById('showMoreBtn');
-  const cardsPerLoad = 9;
-  let currentIndex = 0;
 
-  function showNextBatch() {
-    const start = currentIndex;
-    const end = currentIndex + cardsPerLoad;
+  function applyFilters() {
+    const major = document.getElementById('filter-major').value;
+    const grading = document.getElementById('filter-grading').value;
+    const level = document.getElementById('filter-level').value;
+    const summer = document.getElementById('filter-summer').value;
 
-    for (let i = start; i < end && i < cards.length; i++) {
-      cards[i].classList.remove('d-none');
-    }
+    let visibleCount = 0;
 
-    if (end >= cards.length) {
-      showMoreBtn.style.display = 'none';
-    }
+    cards.forEach(card => {
+      const matchesMajor = !major || card.dataset.major === major;
+      const matchesGrading = !grading || card.dataset.grading === grading;
+      const matchesLevel = !level || card.dataset.level === level;
+      const matchesSummer = !summer || card.dataset.summer === summer;
 
-    currentIndex = end;
+      const shouldShow = matchesMajor && matchesGrading && matchesLevel && matchesSummer;
+      card.style.display = shouldShow ? '' : 'none';
 
-    // Scroll to the first newly shown card
-    if (cards[start]) {
-      cards[start].scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+      if (shouldShow) visibleCount++;
+    });
+
+    document.getElementById('no-results-msg').style.display = visibleCount === 0 ? 'block' : 'none';
   }
 
-  // Show the initial batch
-  showNextBatch();
-
-  // Click handler
-  showMoreBtn.addEventListener('click', showNextBatch);
+  document.getElementById('applyFilters').addEventListener('click', applyFilters);
+  document.getElementById('clearFilters').addEventListener('click', () => {
+    ['filter-major', 'filter-grading', 'filter-level', 'filter-summer'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    applyFilters();
+  });
 </script>
-
-<!-- 🖌️ Optional Styling -->
-<style>
-body {
-  background-color: #0f172a;
-}
-
-.card {
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.btn-outline-light:hover {
-  background-color: #facc15;
-  color: #1f2937;
-  border-color: #facc15;
-}
-</style>
-
 {% endblock %}
