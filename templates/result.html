@@ -10,21 +10,24 @@
   html, body {
     height: 100%;
     margin: 0;
-    background-color: #0f172a;
+    background: transparent;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    color: white;
   }
 
-  /* 🟡 Hero Section */
   .hero-section {
     height: var(--hero-height);
-    background: linear-gradient(90deg, #facc15, #f59e0b);
+    background: rgba(250, 204, 21, 0.85); /* semi-transparent yellow-orange */
     color: #1f2937;
     padding: 2rem 1rem;
     text-align: center;
     position: relative;
     flex-shrink: 0;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .hero-section h1 {
@@ -48,12 +51,12 @@
 
   .filter-panel {
     width: 280px;
-    background-color: #1e293b;
+    background-color: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(10px);
     padding: 1.5rem;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     overflow-y: auto;
-    border: 1px solid #334155;
-    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     flex-shrink: 0;
     max-height: 100%;
   }
@@ -67,8 +70,9 @@
 
   .card {
     margin-bottom: 1.5rem;
-    background-color: #111827;
-    border: 1px solid #334155;
+    background-color: rgba(17, 24, 39, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
     transition: transform 0.2s ease;
   }
 
@@ -83,7 +87,7 @@
   }
 
   .form-select {
-    background-color: #1e293b;
+    background-color: rgba(30, 41, 59, 0.8);
     color: white;
     border-color: #475569;
   }
@@ -214,7 +218,7 @@
   </div>
 </main>
 
-<!-- 🔁 Script -->
+<!-- 🔁 Filter Script -->
 <script>
   const cards = document.querySelectorAll('.course-card');
 

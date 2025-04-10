@@ -1,0 +1,43 @@
+.stepper {
+  counter-reset: step;
+}
+.step {
+  position: relative;
+}
+.step .circle {
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  border-radius: 50%;
+  background: #474747;
+  color: white;
+  line-height: 40px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.step.active .circle {
+  background: #66f0fa;
+}
+.step.completed .circle {
+  background: #1aec8a;
+}
+.step::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  height: 2px;
+  width: 100%;
+  background: #0000008a;
+  z-index: -1;
+}
+.step:first-child::after {
+  display: none;
+}
+.step + .step::after {
+  left: -50%;
+}
+.label {
+  margin-top: 8px;
+  font-size: 0.875rem;
+}
