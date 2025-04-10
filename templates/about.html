@@ -1,20 +1,24 @@
+
 {% extends 'base.html' %}
-{% block title %}
-    About Page
-{% endblock %}
+{% block title %}About{% endblock %}
 
 {% block body %}
 
-<!-- Hero Section -->
-<!-- <section class="hero-section text-center p-5 text-white" style="background: linear-gradient(45deg, #1e3c72, #2a5298);">
-    <div class="container">
-        <h1 class="display-4 fw-bold">About Berkeley Choice</h1>
-        <p class="lead">Empowering students with AI-driven course recommendations tailored to their career goals.</p>
-    </div>
-</section> -->
+<style>
+    body {
+        color: white;
+    }
+</style>
+
+<!-- Logo and Introduction -->
+<section class="text-center p-5" style="background-color: #1e3c72;">
+    <img src="/static/images/berkeley_choice_logo.png" alt="Berkeley Choice Logo" class="mb-3" style="max-height: 100px;">
+    <h1 class="fw-bold text-white">What is Berkeley Choice?</h1>
+    <p class="lead text-white">Berkeley Choice is an AI-driven platform that empowers UC Berkeley students to discover courses aligned with their skills, passions, and career aspirations.</p>
+</section>
 
 <!-- Why We Built This -->
-<!-- <section class="container my-5 p-4 content-section">
+<section class="container my-5 p-4 content-section">
     <h2 class="fw-bold text-center">Why We Built Berkeley Choice</h2>
     <p class="text-center">Choosing the right courses can be overwhelming. Many students struggle with:</p>
     <ul class="list-group list-group-flush">
@@ -22,11 +26,11 @@
         <li class="list-group-item bg-dark text-white">📌 Understanding required skills for job roles</li>
         <li class="list-group-item bg-dark text-white">📌 Navigating through hundreds of course options</li>
     </ul>
-    <p class="text-center mt-3"><strong>Our AI-powered recommendation system makes this easier by matching students to the best courses based on their profiles.</strong></p>
-</section> -->
+    <p class="text-center mt-3"><strong>Our AI-powered recommendation system simplifies this by matching students to ideal courses based on their profiles.</strong></p>
+</section>
 
 <!-- How It Works -->
-<!-- <section class="text-white p-5 how-it-works" style="background-color: #232323;">
+<section class="text-white p-5 how-it-works" style="background-color: #232323;">
     <div class="container text-center">
         <h2 class="fw-bold">How It Works</h2>
         <div class="row mt-4">
@@ -47,35 +51,52 @@
             </div>
         </div>
     </div>
-</section> -->
+</section>
 
-<!-- Meet the Team -->
-<!-- <section class="container my-5 p-4 content-section">
-    <h2 class="fw-bold text-center">Meet Our Team</h2>
+<!-- Meet Our Team -->
+<section class="container my-5 p-4 content-section" style="color: white;">
+    <h2 class="fw-bold text-center" style="color: white;">Meet Our Team</h2>
     <div class="row mt-4 text-center">
         <div class="col-md-4">
-            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="Team Member">
+            <img src="{{ url_for('static', filename='images/zixuan_li.jpg') }}" class="profile-img mb-3 rounded-circle" alt="Zixuan Li" style="width: 120px; height: 120px; object-fit: cover;">
+            <h5>Zixuan Li</h5>
+            <p>Product Lead</p>
+            <p>Email: <a href="mailto:sherrylzx@berkeley.edu">sherrylzx@berkeley.edu</a></p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="John Doe">
             <h5>John Doe</h5>
             <p>Co-Founder | AI Engineer</p>
+            <p>Email: john.doe@example.com</p>
         </div>
         <div class="col-md-4">
-            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="Team Member">
+            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="Jane Smith">
             <h5>Jane Smith</h5>
             <p>Data Scientist</p>
-        </div>
-        <div class="col-md-4">
-            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="Team Member">
-            <h5>Mike Johnson</h5>
-            <p>Frontend Developer</p>
+            <p>Email: jane.smith@example.com</p>
         </div>
     </div>
-</section> -->
+    <div class="row mt-4 text-center">
+        <div class="col-md-6">
+            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="Mike Johnson">
+            <h5>Mike Johnson</h5>
+            <p>Frontend Developer</p>
+            <p>Email: mike.johnson@example.com</p>
+        </div>
+        <div class="col-md-6">
+            <img src="https://via.placeholder.com/120" class="profile-img mb-3 rounded-circle" alt="Emily Chen">
+            <h5>Emily Chen</h5>
+            <p>UX Designer</p>
+            <p>Email: emily.chen@example.com</p>
+        </div>
+    </div>
+</section>
 
-<!-- Future Goals & CTA -->
-<!-- <section class="text-center p-5 text-white" style="background: #2a5298;">
+<!-- Future Goals -->
+<section class="text-center p-5 text-white" style="background: #2a5298;">
     <h2 class="fw-bold">What's Next?</h2>
-    <p class="lead">We’re continuously improving our AI to provide better course recommendations. Have suggestions? Reach out!</p>
+    <p class="lead">We’re continuously improving our AI to provide even smarter course recommendations. Want to collaborate or give feedback?</p>
     <a href="/contact" class="btn btn-warning btn-lg mt-3">Contact Us</a>
-</section> -->
+</section>
 
 {% endblock %}

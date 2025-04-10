@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+<section class="container my-5 p-4 rounded bg-light text-dark">
+    <h2 class="fw-bold text-center mb-4">UC Berkeley Department Contacts</h2>
+    <div class="row">
+        <!-- Example Department -->
+        <div class="col-md-6 mb-4">
+            <h5>Department Name</h5>
+            <p>Email: <a href="mailto:department_email@berkeley.edu">department_email@berkeley.edu</a></p>
+            <p>Phone: (510) XXX-XXXX</p>
+            <p>Office: Building Name, Room Number</p>
+        </div>
+        <!-- Repeat similar blocks for other departments -->
+    </div>
+</section>
+{% endblock %}

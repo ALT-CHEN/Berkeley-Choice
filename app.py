@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from routes.home import home_bp
 from routes.about import about_bp
 from routes.recommendation import recommendation_bp
+from routes.contact import contact_bp
 
 db = SQLAlchemy()
 
@@ -19,6 +20,7 @@ def create_app():
     app.register_blueprint(home_bp)
     app.register_blueprint(about_bp)
     app.register_blueprint(recommendation_bp)
+    app.register_blueprint(contact_bp)
 
     return app
 
