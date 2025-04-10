@@ -109,7 +109,11 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   ">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-white px-4 fs-4" href="/"> Berkeley Choice</a>
+      <a class="navbar-brand fw-bold text-white px-4 fs-4 d-flex align-items-center gap-2" href="/">
+        <img src="{{ url_for('static', filename='images/berkeley_choice_logo.png') }}" alt="Logo" style="height: 40px;">
+        Berkeley Choice
+      </a>
+      
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
