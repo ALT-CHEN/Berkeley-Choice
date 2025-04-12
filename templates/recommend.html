@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block css %}
-
 <style>
   .form-container {
     background-color: rgba(255, 255, 255, 0.1);
@@ -29,6 +28,71 @@
   .btn-submit {
     margin-top: 1rem;
   }
+
+  /* === Minimal Custom Range Slider === */
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 2em;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background-color: #16a085;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  input[type=range]:hover::-webkit-slider-thumb {
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+
+  input[type=range]:active::-webkit-slider-thumb {
+    border-color: rgba(255, 255, 255, 1);
+  }
+
+  input[type=range]::-moz-range-thumb {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background-color: #16a085;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  input[type=range]:hover::-moz-range-thumb {
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+
+  input[type=range]:active::-moz-range-thumb {
+    border-color: rgba(255, 255, 255, 1);
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 1em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+  }
+
+  input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 1em;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+  }
 </style>
 {% endblock %}
 
@@ -41,7 +105,7 @@
   <div class="form-container">
     <h2 class="text-center mb-4">Course Recommendation Form</h2>
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('recommendation.recommend') }}">
-      
+
       <!-- 🎓 Academics -->
       <div class="form-section">
         <h4>Academics</h4>
@@ -56,7 +120,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Major 1</label>
+          <label class="form-label">(Expected) Major 1</label>
           <select class="form-select" name="major1_mapped">
             <option value="">Select your major</option>
             {% for major in major1_options %}
@@ -66,7 +130,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Major 2</label>
+          <label class="form-label">(Expected) Major 2</label>
           <select class="form-select" name="major2_mapped">
             <option value="">Select your major</option>
             {% for major in major2_options %}
@@ -77,7 +141,7 @@
 
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label class="form-label">GPA</label>
+            <label class="form-label">(Expected) GPA</label>
             <input type="number" step="0.01" min="0" max="4.0" class="form-control" name="gpa">
           </div>
           <div class="col-md-4 mb-3">
@@ -85,13 +149,13 @@
             <input type="number" class="form-control" name="institution_count" min="0">
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">Year of Graduation</label>
+            <label class="form-label">(Expected) Year of Graduation</label>
             <input type="number" class="form-control" name="max_passing_year" min="1900" max="2100">
           </div>
         </div>
       </div>
 
-      <!-- 💼 Work -->
+      <!-- 💼 Work Experience -->
       <div class="form-section">
         <h4>Work Experience</h4>
         <div class="mb-3">
@@ -101,7 +165,7 @@
 
         {% for job_label, job_list in [('job1', job1_options), ('job2', job2_options), ('job3', job3_options)] %}
         <div class="mb-3">
-          <label class="form-label">{{ job_label.replace('job', 'Job ') }}</label>
+          <label class="form-label">(Expected) {{ job_label.replace('job', 'Job ') }}</label>
           <select class="form-select" name="{{ job_label }}">
             <option value="">Select a job title</option>
             {% for job in job_list %}
@@ -112,7 +176,7 @@
         {% endfor %}
       </div>
 
-      <!-- 🧍 Other Info -->
+      <!-- 🧍 Additional Info -->
       <div class="form-section">
         <h4>Additional Information</h4>
         <div class="mb-3">
@@ -149,7 +213,25 @@
         </div>
       </div>
 
-      <!-- 📎 Resume -->
+      <!-- 🎯 Recommendation Preference Slider -->
+      <div class="form-section">
+        <h4>Recommendation Preference</h4>
+        <div class="mb-3 text-white">
+          <label class="form-label mb-3 text-center d-block" style="font-weight: 500;">
+            How closely do you want your future jobs to align with your academic background?
+          </label>
+
+          <div class="d-flex align-items-center gap-3">
+            <span style="min-width: 40px;">Low</span>
+            <input type="range" class="form-range flex-grow-1"
+                   id="correlation_slider" name="correlation"
+                   min="0" max="100" step="1" required>
+            <span style="min-width: 50px;">High</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 📎 Resume Upload -->
       <div class="form-section">
         <h4>Resume Upload</h4>
         <div class="mb-3">
@@ -171,3 +253,4 @@
   </div>
 </div>
 {% endblock %}
+
