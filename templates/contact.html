@@ -1,18 +1,69 @@
 {% extends 'base.html' %}
 {% block title %}Contact{% endblock %}
 
+{% block css %}
+<style>
+  .form-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .card img {
+    border: 3px solid #facc15;
+    padding: 3px;
+    background-color: #fff;
+  }
+
+  .card-body {
+    padding-top: 0.5rem;
+  }
+</style>
+{% endblock %}
+
 {% block body %}
-<section class="container my-5 p-4 rounded bg-light text-dark">
-    <h2 class="fw-bold text-center mb-4">UC Berkeley Department Contacts</h2>
-    <div class="row">
-        <!-- Example Department -->
-        <div class="col-md-6 mb-4">
-            <h5>Department Name</h5>
-            <p>Email: <a href="mailto:department_email@berkeley.edu">department_email@berkeley.edu</a></p>
-            <p>Phone: (510) XXX-XXXX</p>
-            <p>Office: Building Name, Room Number</p>
-        </div>
-        <!-- Repeat similar blocks for other departments -->
+<!-- 🔹 IEOR Department Contact -->
+<section class="container my-5">
+  <div class="form-container">
+    <h2 class="fw-bold text-center mb-4">Contact IEOR Department</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center">
+        <h5 class="mb-2">Industrial Engineering & Operations Research</h5>
+        <p>Email: <a href="mailto:ieor@berkeley.edu" class="text-warning">ieor@berkeley.edu</a></p>
+        <p>Phone: (510) 642-5484</p>
+        <p>Office: Etcheverry Hall, Room 4147</p>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- 👥 Meet Our Team -->
+<section class="container my-5">
+  <div class="form-container">
+    <h2 class="fw-bold text-center mb-5">Meet Our Team</h2>
+    <div class="row justify-content-center g-4">
+      {% for member in [
+        {'name': 'Zixuan Li', 'role': 'Product Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'},
+        {'name': 'Chenyang Wang', 'role': 'Machine Learning Engineer', 'img': 'brian.jpg', 'email': 'brian.berkeley@gmail.com'},
+        {'name': 'Anzhou Wang', 'role': 'Data Scientist', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
+        {'name': 'Huei-Sin Liu', 'role': 'Frontend Developer', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
+        {'name': 'Linzhe Wu', 'role': 'Backend Developer', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'}
+      ] %}
+      <div class="col-6 col-md-4 col-lg-2 d-flex">
+        <div class="card border-0 shadow-sm w-100 text-center" style="background-color: rgba(255,255,255,0.05); color: white;">
+          <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}" class="card-img-top rounded-circle mt-3 mx-auto" style="width: 100px; height: 100px; object-fit: cover;" alt="{{ member.name }}">
+          <div class="card-body">
+            <h6 class="card-title mb-1">{{ member.name }}</h6>
+            <p class="card-text text-warning small mb-2">{{ member.role }}</p>
+            <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none d-block"> {{ member.email }} </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 {% endblock %}

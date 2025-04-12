@@ -1,69 +1,154 @@
 {% extends 'base.html' %}
-{% block title %}
-    Home Page
+
+{% block title %}Home Page{% endblock %}
+
+{% block css %}
+<style>
+  .hero-image {
+    background: 
+      linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
+      url("{{ url_for('static', filename='images/UCB-BG.jpg') }}") center center / cover no-repeat;
+    height: calc(100vh - 72px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .hero-content {
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 193, 7, 0.8);
+    border-radius: 20px;
+    padding: 3rem;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+    animation: fadeInUp 1.5s ease-out;
+    max-width: 1000px;
+    width: 100%;
+  }
+
+  .hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #facc15;
+  }
+
+  .hero-content p {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .btn-glow {
+    background-color: #facc15;
+    color: #1f2937;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+  }
+
+  .btn-glow:hover {
+    background-color: #ffe066;
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.9);
+    color: #000;
+  }
+
+  .stats-row {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .stat-box {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(250, 204, 21, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(255, 193, 7, 0.5);
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #facc15;
+  }
+
+  .stat-label {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
 {% endblock %}
+
 {% block body %}
-    <!-- Hero Section -->
-    <section class="text-center p-5 text-white" style="background: linear-gradient(45deg, #f3b304, #2a5298);">
-        <div class="container">
-            <h1 class="display-4 fw-bold">Find the Perfect Course for You</h1>
-            <p class="lead">Berkeley Choice uses AI to recommend the best courses based on your skills and career goals.</p>
-            <a href="/recommend" class="btn btn-primary btn-lg mt-3">Get Started</a>
-        </div>
-    </section>
+<!-- 🌟 Hero Section with Integrated Counters -->
+<section class="hero-image">
+  <div class="hero-content">
+    <h1>Shape Your Berkeley Journey</h1>
+    <p>Discover AI-powered course recommendations tailored just for you.</p>
+    <a href="/recommend" class="btn btn-glow">Get Recommendations</a>
 
-    <!-- Main Content Container (Light Contrast) -->
-    <section class="container my-5 p-4 rounded" style="color: white;">
-        <h2 class="fw-bold text-center">What is Berkeley Choice?</h2>
-        <div class="row mt-4 text-center">
-            <div class="col-md-4">
-                <i class="fas fa-brain fa-3x text-primary"></i>
-                <h4 class="mt-3">AI-Powered Recommendations</h4>
-                <p>Get personalized course recommendations based on your skills.</p>
-            </div>
-            <div class="col-md-4">
-                <i class="fas fa-chart-bar fa-3x text-success"></i>
-                <h4 class="mt-3">Interactive Insights</h4>
-                <p>Visualize course trends and required skills in our dashboard.</p>
-            </div>
-            <div class="col-md-4">
-                <i class="fas fa-graduation-cap fa-3x text-warning"></i>
-                <h4 class="mt-3">Learn from the Best</h4>
-                <p>Explore top-rated courses at UC Berkeley.</p>
-            </div>
-        </div>
-    </section>
+    <!-- 🔢 Stats Row (Integrated in hero) -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div id="counter-courses" class="stat-number">0</div>
+        <div class="stat-label">Courses Matched</div>
+      </div>
+      <div class="stat-box">
+        <div id="counter-students" class="stat-number">0</div>
+        <div class="stat-label">Students Helped</div>
+      </div>
+      <div class="stat-box">
+        <div id="counter-speed" class="stat-number">0</div>
+        <div class="stat-label">Avg. Match Time (s)</div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
-    <!-- Step-by-Step Section (Darker Background) -->
-    <section class="text-white p-5" style="background-color: #232323;">
-        <div class="container text-center">
-            <h2 class="fw-bold">How It Works</h2>
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <span class="badge bg-primary p-3 fs-5">1</span>
-                    <h5 class="mt-3">Upload Your Resume</h5>
-                    <p>Provide details about your skills and experience.</p>
-                </div>
-                <div class="col-md-4">
-                    <span class="badge bg-success p-3 fs-5">2</span>
-                    <h5 class="mt-3">AI Matches Courses</h5>
-                    <p>Our system finds the best courses for you.</p>
-                </div>
-                <div class="col-md-4">
-                    <span class="badge bg-warning p-3 fs-5">3</span>
-                    <h5 class="mt-3">Get Personalized Results</h5>
-                    <p>View your recommended courses and enroll easily.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+{% block scripts %}
+<!-- ✅ Counter Animation Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.7/countUp.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const options = { duration: 2 };
 
-    <!-- Call-to-Action (Blue Theme for Engagement) -->
-    <section class="text-center p-5 text-white" style="background: #2a5298;">
-        <h2 class="fw-bold">Ready to Find Your Perfect Course?</h2>
-        <p class="lead">Discover the best courses tailored to your skills and career goals.</p>
-        <a href="/recommend" class="btn btn-warning btn-lg mt-3">Get Your Recommendations</a>
-    </section>
+    const courses = new CountUp("counter-courses", 12542, options);
+    const students = new CountUp("counter-students", 3300, options);
+    const speed = new CountUp("counter-speed", 2.4, { ...options, decimalPlaces: 1 });
 
-
+    if (!courses.error) courses.start();
+    if (!students.error) students.start();
+    if (!speed.error) speed.start();
+  });
+</script>
 {% endblock %}
