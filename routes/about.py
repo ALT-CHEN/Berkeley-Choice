@@ -4,4 +4,4 @@ about_bp = Blueprint("about", __name__)  # Create a Blueprint
 
 @about_bp.route("/about")
 def about():
-    return render_template('about.html')
+    return render_template('aboutU.html')
