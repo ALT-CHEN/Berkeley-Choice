@@ -3,254 +3,192 @@
 
 {% block body %}
 <style>
-  :root {
-    --hero-height: 150px;
-  }
+  /* Existing style remains unchanged for layout */
+  :root { --hero-height: 150px; }
+  html, body { height: 100%; margin: 0; background: transparent; display: flex; flex-direction: column; overflow: hidden; color: white; }
+  .form-label, .select-label, label { color: white; }
+  .hero-section { height: var(--hero-height); background: rgba(250, 204, 21, 0.85); color: #1f2937; padding: 2rem 1rem; text-align: center; position: relative; flex-shrink: 0; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  .hero-section h1 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  .flex-main { height: calc(100vh - var(--hero-height) - 72px); overflow: hidden; }
+  .layout-container { display: flex; height: 100%; overflow: hidden; max-width: 90%; margin: 0 auto; padding: 1rem 1.5rem 1rem 1.5rem; gap: 2rem; }
+  .filter-panel { flex: 2; background-color: rgba(17, 24, 39, 0.616); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 0.75rem; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.05); flex-shrink: 0; max-height: 100%; }
+  .results-panel { flex: 5; overflow-y: auto; min-height: 0; padding-right: 1rem; }
+  .card { margin-bottom: 1.5rem; background-color: rgba(17, 24, 39, 0.616); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(6px); transition: transform 0.2s ease; }
+  .card:hover { transform: translateY(-4px); }
+  .btn-outline-light:hover { background-color: #facc15; color: #1f2937; border-color: #facc15; }
+  .course-card { width: 100%; }
+  .results-panel::-webkit-scrollbar { width: 6px; }
+  .results-panel::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 4px; }
+  #no-results-msg { font-size: 1.5rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: none; }
 
-  html, body {
-    height: 100%;
-    margin: 0;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    color: white;
-  }
-
-  .hero-section {
-    height: var(--hero-height);
-    background: rgba(250, 204, 21, 0.85); /* semi-transparent yellow-orange */
-    color: #1f2937;
-    padding: 2rem 1rem;
-    text-align: center;
-    position: relative;
-    flex-shrink: 0;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .hero-section h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  .flex-main {
-    height: calc(100vh - var(--hero-height));
-    overflow: hidden;
-  }
-
-  .layout-container {
-    display: flex;
-    height: 100%;
-    overflow: hidden;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem 1.5rem 5rem 1.5rem;
-    gap: 2rem;
-  }
-
-  .filter-panel {
-    width: 280px;
-    background-color: rgba(30, 41, 59, 0.75);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    overflow-y: auto;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
-    max-height: 100%;
-  }
-
-  .results-panel {
-    flex: 1;
-    overflow-y: auto;
-    min-height: 0;
-    padding-right: 1rem;
-  }
-
-  .card {
-    margin-bottom: 1.5rem;
-    background-color: rgba(17, 24, 39, 0.616);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(6px);
-    transition: transform 0.2s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-4px);
-  }
-
-  .btn-outline-light:hover {
-    background-color: #facc15;
-    color: #1f2937;
-    border-color: #facc15;
-  }
-
-  .form-select {
-    background-color: rgba(30, 41, 59, 0.8);
-    color: white;
-    border-color: #475569;
-  }
-
-  .form-select:focus {
-    border-color: #facc15;
-    box-shadow: 0 0 0 0.25rem rgba(250, 204, 21, 0.25);
-  }
-
-  .course-card {
-    width: 100%;
-  }
-
-  .results-panel::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .results-panel::-webkit-scrollbar-thumb {
-    background-color: #475569;
-    border-radius: 4px;
-  }
-
-  #no-results-msg {
-    font-size: 1.5rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: none;
-  }
+  .custom-multiselect { position: relative; display: inline-block; width: 100%; }
+  .custom-multiselect .dropdown-btn { width: 100%; padding: 10px; background: #fff; color: #1f2937; border: 1px solid #ced4da; border-radius: 0.375rem; text-align: left; cursor: pointer; }
+  .custom-multiselect .dropdown-content { display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto; background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000; }
+  .custom-multiselect.show .dropdown-content { display: block; }
+  .custom-multiselect .dropdown-content label { display: block; padding: 8px 12px; margin: 0; cursor: pointer; color: #1f2937; }
+  .custom-multiselect .dropdown-content input[type="checkbox"] { margin-right: 8px; }
+  .custom-multiselect .search-box { padding: 8px; }
+  .custom-multiselect .search-box input { width: 100%; padding: 5px; border: 1px solid #ced4da; border-radius: 0.375rem; }
 
   @media (max-width: 768px) {
-    .layout-container {
-      flex-direction: column;
-    }
-
-    .filter-panel {
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-
-    .results-panel {
-      padding-right: 0;
-    }
+    .layout-container { flex-direction: column; }
+    .filter-panel { width: 100%; margin-bottom: 1rem; }
+    .results-panel { padding-right: 0; }
   }
 </style>
 
-<!-- 🟡 Hero Section -->
 <section class="hero-section">
   <div class="container">
     <h1 class="display-5 fw-bold mb-2">🚀 Your Personalized Course Recommendations</h1>
     <p class="lead" style="font-size: 1.2rem;">
       Curated just for you based on your goals, background, and career path.
     </p>
-    <div class="position-absolute top-0 end-0 opacity-25" style="font-size: 5rem; pointer-events: none; padding: 1rem;">
-      📚
-    </div>
   </div>
 </section>
 
-<!-- 📦 Main Flexible Section -->
 <main class="flex-main">
   <div class="layout-container">
-    <!-- 🎛️ Filter Sidebar -->
     <div class="filter-panel">
       <h5 class="mb-4 text-warning">Filter Courses</h5>
-      <div class="mb-3">
-        <label class="form-label">Major</label>
-        <select class="form-select" id="filter-major">
-          <option value="">All</option>
-          <option value="CS">Computer Science</option>
-          <option value="EE">Electrical Engineering</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Grading Option</label>
-        <select class="form-select" id="filter-grading">
-          <option value="">All</option>
-          <option value="Letter">Letter</option>
-          <option value="P/NP">Pass/No Pass</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Level</label>
-        <select class="form-select" id="filter-level">
-          <option value="">All</option>
-          <option value="Undergraduate">Undergraduate</option>
-          <option value="Graduate">Graduate</option>
-        </select>
-      </div>
-      <div class="mb-4">
-        <label class="form-label">Summer</label>
-        <select class="form-select" id="filter-summer">
-          <option value="">All</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </div>
-      <button class="btn btn-outline-warning w-100 fw-bold" id="applyFilters">Apply Filters</button>
-      <button class="btn btn-outline-light mt-2 w-100 fw-bold" id="clearFilters">Clear Filters</button>
+      <form id="filter-form">
+        {% for field, label, options in [
+          ('major', 'Major', major_options),
+          ('grading', 'Grading Option', grading_options),
+          ('level', 'Course Level', course_levels),
+          ('unit', 'Course Unit', unit_options)
+        ] %}
+          {% if field in ['major', 'level', 'unit'] %}
+          <div class="mb-3">
+            <label class="form-label">{{ label }}</label>
+            <div class="custom-multiselect" data-filter-name="{{ field }}">
+              <div class="dropdown-btn">0 selected</div>
+              <div class="dropdown-content">
+                <div class="search-box"><input type="text" placeholder="Search..."></div>
+                <label><input type="checkbox" value="__all__" class="select-all"> Select All</label>
+                {% for option in options %}
+                <label><input type="checkbox" value="{{ option }}"> {{ option }}</label>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="mb-3">
+            <label class="form-label">{{ label }}</label>
+            <select id="filter-{{ field }}" class="form-select">
+              {% for option in options %}
+                <option value="{{ option }}">{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endif %}
+        {% endfor %}
+        <div class="mb-4">
+          <label class="form-label">Summer</label>
+          <select class="form-select" id="filter-summer">
+            <option value="">All</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-outline-warning w-100 fw-bold" id="applyFilters">Apply Filters</button>
+        <button type="button" class="btn btn-outline-light mt-2 w-100 fw-bold" id="clearFilters">Clear Filters</button>
+      </form>
     </div>
 
-    <!-- 📌 Scrollable Results Panel -->
     <div class="results-panel">
       <div id="card-grid">
         {% for course in recommendations %}
         <div class="course-card"
              data-major="{{ course.major }}"
-             data-grading="{{ course.grading_option }}"
-             data-level="{{ course.level }}"
-             data-summer="{{ course.summer }}">
+             data-grading="{{ course.grading }}"
+             data-level="{{ course.course_level }}"
+             data-summer="{{ course.summer_schedule }}"
+             data-units="{{ course.course_units_parsed|join(',') }}">
           <div class="card text-light rounded-3">
             <div class="card-body">
-              <h5 class="card-title text-warning mb-2">{{ course.code }} – {{ course.title }}</h5>
-              <div class="mb-2">
-                <small class="text-muted">Match Score</small>
-                <span class="small">{{ course.match_score * 100 }}%</span>
-              </div>
+              <h5 class="card-title text-warning mb-2">{{ course.course_code }} – {{ course.course_title }}</h5>
+              <p class="mb-1 small">Major: {{ course.major }}</p>
+              <p class="mb-1 small">Grading: {{ course.grading }}</p>
+              <p class="mb-1 small">Units: {{ course.course_units }}</p>
             </div>
             <div class="card-footer bg-transparent border-0">
-              <a href="{{ course.url }}" target="_blank" class="btn btn-outline-light w-100">View Details</a>
+              <a href="{{ course.course_url }}" target="_blank" class="btn btn-outline-light w-100">View Details</a>
             </div>
           </div>
         </div>
         {% endfor %}
       </div>
-      <p id="no-results-msg" class="text-center text-warning mt-5 fw-semibold">
+      <p id="no-results-msg" class="text-center text-warning mt-5 fw-semibold" style="display:none">
         🚫 No matching courses found.
       </p>
     </div>
   </div>
 </main>
 
-<!-- 🔁 Filter Script -->
 <script>
+  function getCheckedValues(field) {
+    return Array.from(document.querySelectorAll(`.custom-multiselect[data-filter-name="${field}"] input[type='checkbox']:checked`))
+                .map(cb => cb.value).filter(v => v !== '__all__');
+  }
+
   const cards = document.querySelectorAll('.course-card');
-
   function applyFilters() {
-    const major = document.getElementById('filter-major').value;
-    const grading = document.getElementById('filter-grading').value;
-    const level = document.getElementById('filter-level').value;
+    const majors = getCheckedValues('major');
+    const gradings = Array.from(document.getElementById('filter-grading').selectedOptions).map(o => o.value);
+    const levels = getCheckedValues('level');
+    const units = getCheckedValues('unit');
     const summer = document.getElementById('filter-summer').value;
-
     let visibleCount = 0;
-
     cards.forEach(card => {
-      const matchesMajor = !major || card.dataset.major === major;
-      const matchesGrading = !grading || card.dataset.grading === grading;
-      const matchesLevel = !level || card.dataset.level === level;
-      const matchesSummer = !summer || card.dataset.summer === summer;
-
-      const shouldShow = matchesMajor && matchesGrading && matchesLevel && matchesSummer;
+      const matchesMajor = majors.length === 0 || majors.includes(card.dataset.major);
+      const matchesGrading = gradings.length === 0 || gradings.includes(card.dataset.grading);
+      const matchesLevel = levels.length === 0 || levels.includes(card.dataset.level);
+      const matchesSummer = summer === '' || summer === card.dataset.summer;
+      const cardUnits = card.dataset.units.split(',').map(x => x.trim());
+      const matchesUnit = units.length === 0 || units.some(u => cardUnits.includes(u));
+      const shouldShow = matchesMajor && matchesGrading && matchesLevel && matchesSummer && matchesUnit;
       card.style.display = shouldShow ? '' : 'none';
-
       if (shouldShow) visibleCount++;
     });
-
     document.getElementById('no-results-msg').style.display = visibleCount === 0 ? 'block' : 'none';
   }
 
   document.getElementById('applyFilters').addEventListener('click', applyFilters);
   document.getElementById('clearFilters').addEventListener('click', () => {
-    ['filter-major', 'filter-grading', 'filter-level', 'filter-summer'].forEach(id => {
-      document.getElementById(id).value = '';
+    document.getElementById('filter-form').reset();
+    ['major', 'level', 'unit'].forEach(field => {
+      document.querySelectorAll(`.custom-multiselect[data-filter-name="${field}"] input[type='checkbox']`).forEach(cb => cb.checked = false);
+      document.querySelector(`.custom-multiselect[data-filter-name="${field}"] .dropdown-btn`).textContent = '0 selected';
     });
     applyFilters();
+  });
+
+  document.querySelectorAll('.custom-multiselect').forEach(dropdown => {
+    const btn = dropdown.querySelector('.dropdown-btn');
+    const content = dropdown.querySelector('.dropdown-content');
+    const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+    const searchInput = dropdown.querySelector('.search-box input');
+
+    btn.addEventListener('click', () => dropdown.classList.toggle('show'));
+    function updateCount() {
+      const count = [...checkboxes].filter(cb => cb.checked && cb.value !== '__all__').length;
+      btn.textContent = `${count} selected`;
+    }
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.toLowerCase();
+      dropdown.querySelectorAll('label').forEach(label => {
+        const text = label.textContent.toLowerCase();
+        label.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+    checkboxes.forEach(cb => cb.addEventListener('change', () => {
+      if (cb.classList.contains('select-all')) {
+        const allChecked = cb.checked;
+        checkboxes.forEach(item => { if (item !== cb) item.checked = allChecked; });
+      }
+      updateCount();
+    }));
+    updateCount();
   });
 </script>
 {% endblock %}

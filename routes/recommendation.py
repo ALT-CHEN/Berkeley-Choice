@@ -59,22 +59,39 @@ def result():
     resume_filename = session.get('resume_filename', '')
 
     extracted_skills = []
-
     if resume_filename:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         resume_path = os.path.join(BASE_DIR, 'uploads', resume_filename)
-
-        # Check if file exists before calling the function
         if os.path.exists(resume_path):
             _, extracted_skills = extract_skills_from_resume(resume_path)
         else:
             extracted_skills = ["⚠️ Resume file not found."]
 
-    recommended_courses = generate_fake_recommendations()
-    
+    # Load the courses and parse
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    csv_path = os.path.join(BASE_DIR, 'data', 'courses.csv')
+    df = pd.read_csv(csv_path)
+    df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
+    import ast
+    df["course_units_parsed"] = df["course_units_parsed"].apply(lambda x: ast.literal_eval(x) if pd.notnull(x) else [])
+
+    # Extract filter values
+    major_options = sorted(df["major"].dropna().unique())
+    grading_options = sorted(df["grading"].dropna().unique())
+    course_levels = sorted(df["course_level"].dropna().unique())
+    summer_options = sorted(df["summer_schedule"].dropna().unique())
+    unit_options = sorted(set(unit for units in df["course_units_parsed"] for unit in units))
+
+    recommended_courses = df.to_dict(orient="records")
 
     return render_template(
         "result.html",
         recommendations=recommended_courses,
         user_data=form_data,
-        extracted_skills=extracted_skills)
+        extracted_skills=extracted_skills,
+        major_options=major_options,
+        grading_options=grading_options,
+        course_levels=course_levels,
+        summer_options=summer_options,
+        unit_options=unit_options
+    )
