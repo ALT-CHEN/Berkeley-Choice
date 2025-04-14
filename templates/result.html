@@ -3,32 +3,87 @@
 
 {% block body %}
 <style>
-  /* Existing style remains unchanged for layout */
   :root { --hero-height: 150px; }
-  html, body { height: 100%; margin: 0; background: transparent; display: flex; flex-direction: column; overflow: hidden; color: white; }
+  html, body {
+    height: 100%; margin: 0; background: black;
+    display: flex; flex-direction: column;
+    overflow: hidden; color: white;
+  }
   .form-label, .select-label, label { color: white; }
-  .hero-section { height: var(--hero-height); background: rgba(250, 204, 21, 0.85); color: #1f2937; padding: 2rem 1rem; text-align: center; position: relative; flex-shrink: 0; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-  .hero-section h1 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  .flex-main { height: calc(100vh - var(--hero-height) - 72px); overflow: hidden; }
-  .layout-container { display: flex; height: 100%; overflow: hidden; max-width: 90%; margin: 0 auto; padding: 1rem 1.5rem 1rem 1.5rem; gap: 2rem; }
-  .filter-panel { flex: 2; background-color: rgba(17, 24, 39, 0.616); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 0.75rem; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.05); flex-shrink: 0; max-height: 100%; }
-  .results-panel { flex: 5; overflow-y: auto; min-height: 0; padding-right: 1rem; }
-  .card { margin-bottom: 1.5rem; background-color: rgba(17, 24, 39, 0.616); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(6px); transition: transform 0.2s ease; }
+  .hero-section {
+    height: var(--hero-height); background: rgba(250, 204, 21, 0.85);
+    color: #1f2937; padding: 2rem 1rem; text-align: center;
+    position: relative; flex-shrink: 0; backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .hero-section h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .flex-main {
+    height: calc(100vh - var(--hero-height) - 72px); overflow: hidden;
+  }
+  .layout-container {
+    display: flex; height: 100%; overflow: hidden;
+    max-width: 90%; margin: 0 auto;
+    padding: 1rem 1.5rem; gap: 2rem;
+  }
+  .filter-panel {
+    flex: 2; background-color: rgba(17, 24, 39, 0.616);
+    backdrop-filter: blur(10px); padding: 1.5rem;
+    border-radius: 0.75rem; overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    flex-shrink: 0; max-height: 100%;
+  }
+  .results-panel {
+    flex: 5; overflow-y: auto; min-height: 0; padding-right: 1rem;
+  }
+  .card {
+    margin-bottom: 1.5rem; background-color: rgba(17, 24, 39, 0.616);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px); transition: transform 0.2s ease;
+  }
   .card:hover { transform: translateY(-4px); }
-  .btn-outline-light:hover { background-color: #facc15; color: #1f2937; border-color: #facc15; }
+  .btn-outline-light:hover {
+    background-color: #facc15; color: #1f2937; border-color: #facc15;
+  }
   .course-card { width: 100%; }
   .results-panel::-webkit-scrollbar { width: 6px; }
-  .results-panel::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 4px; }
-  #no-results-msg { font-size: 1.5rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: none; }
+  .results-panel::-webkit-scrollbar-thumb {
+    background-color: #475569; border-radius: 4px;
+  }
+  #no-results-msg {
+    font-size: 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: none;
+  }
 
-  .custom-multiselect { position: relative; display: inline-block; width: 100%; }
-  .custom-multiselect .dropdown-btn { width: 100%; padding: 10px; background: #fff; color: #1f2937; border: 1px solid #ced4da; border-radius: 0.375rem; text-align: left; cursor: pointer; }
-  .custom-multiselect .dropdown-content { display: none; position: absolute; width: 100%; max-height: 200px; overflow-y: auto; background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000; }
+  .custom-multiselect {
+    position: relative; display: inline-block; width: 100%;
+  }
+  .custom-multiselect .dropdown-btn {
+    width: 100%; padding: 10px; background: #fff; color: #1f2937;
+    border: 1px solid #ced4da; border-radius: 0.375rem;
+    text-align: left; cursor: pointer;
+  }
+  .custom-multiselect .dropdown-content {
+    display: none; position: absolute; width: 100%; max-height: 200px;
+    overflow-y: auto; background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000;
+  }
   .custom-multiselect.show .dropdown-content { display: block; }
-  .custom-multiselect .dropdown-content label { display: block; padding: 8px 12px; margin: 0; cursor: pointer; color: #1f2937; }
-  .custom-multiselect .dropdown-content input[type="checkbox"] { margin-right: 8px; }
+  .custom-multiselect .dropdown-content label {
+    display: block; padding: 8px 12px; margin: 0;
+    cursor: pointer; color: #1f2937;
+  }
+  .custom-multiselect .dropdown-content input[type="checkbox"] {
+    margin-right: 8px;
+  }
   .custom-multiselect .search-box { padding: 8px; }
-  .custom-multiselect .search-box input { width: 100%; padding: 5px; border: 1px solid #ced4da; border-radius: 0.375rem; }
+  .custom-multiselect .search-box input {
+    width: 100%; padding: 5px;
+    border: 1px solid #ced4da; border-radius: 0.375rem;
+  }
 
   @media (max-width: 768px) {
     .layout-container { flex-direction: column; }
@@ -55,9 +110,9 @@
           ('major', 'Major', major_options),
           ('grading', 'Grading Option', grading_options),
           ('level', 'Course Level', course_levels),
-          ('unit', 'Course Unit', unit_options)
+          ('unit', 'Course Unit', unit_options),
+          ('summer', 'Summer', ['Yes', 'No'])
         ] %}
-          {% if field in ['major', 'level', 'unit'] %}
           <div class="mb-3">
             <label class="form-label">{{ label }}</label>
             <div class="custom-multiselect" data-filter-name="{{ field }}">
@@ -66,30 +121,18 @@
                 <div class="search-box"><input type="text" placeholder="Search..."></div>
                 <label><input type="checkbox" value="__all__" class="select-all"> Select All</label>
                 {% for option in options %}
-                <label><input type="checkbox" value="{{ option }}"> {{ option }}</label>
+                <label>
+                  {% if field == 'summer' %}
+                  <input type="checkbox" value="{{ '1' if option == 'Yes' else '0' }}"> {{ option }}
+                  {% else %}
+                  <input type="checkbox" value="{{ option }}"> {{ option }}
+                  {% endif %}
+                </label>
                 {% endfor %}
               </div>
             </div>
           </div>
-          {% else %}
-          <div class="mb-3">
-            <label class="form-label">{{ label }}</label>
-            <select id="filter-{{ field }}" class="form-select">
-              {% for option in options %}
-                <option value="{{ option }}">{{ option }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          {% endif %}
         {% endfor %}
-        <div class="mb-4">
-          <label class="form-label">Summer</label>
-          <select class="form-select" id="filter-summer">
-            <option value="">All</option>
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-          </select>
-        </div>
         <button type="button" class="btn btn-outline-warning w-100 fw-bold" id="applyFilters">Apply Filters</button>
         <button type="button" class="btn btn-outline-light mt-2 w-100 fw-bold" id="clearFilters">Clear Filters</button>
       </form>
@@ -132,18 +175,20 @@
   }
 
   const cards = document.querySelectorAll('.course-card');
+
   function applyFilters() {
     const majors = getCheckedValues('major');
-    const gradings = Array.from(document.getElementById('filter-grading').selectedOptions).map(o => o.value);
+    const gradings = getCheckedValues('grading');
     const levels = getCheckedValues('level');
     const units = getCheckedValues('unit');
-    const summer = document.getElementById('filter-summer').value;
+    const summer = getCheckedValues('summer');
+
     let visibleCount = 0;
     cards.forEach(card => {
       const matchesMajor = majors.length === 0 || majors.includes(card.dataset.major);
       const matchesGrading = gradings.length === 0 || gradings.includes(card.dataset.grading);
       const matchesLevel = levels.length === 0 || levels.includes(card.dataset.level);
-      const matchesSummer = summer === '' || summer === card.dataset.summer;
+      const matchesSummer = summer.length === 0 || summer.includes(card.dataset.summer);
       const cardUnits = card.dataset.units.split(',').map(x => x.trim());
       const matchesUnit = units.length === 0 || units.some(u => cardUnits.includes(u));
       const shouldShow = matchesMajor && matchesGrading && matchesLevel && matchesSummer && matchesUnit;
@@ -156,7 +201,7 @@
   document.getElementById('applyFilters').addEventListener('click', applyFilters);
   document.getElementById('clearFilters').addEventListener('click', () => {
     document.getElementById('filter-form').reset();
-    ['major', 'level', 'unit'].forEach(field => {
+    ['major', 'level', 'unit', 'grading', 'summer'].forEach(field => {
       document.querySelectorAll(`.custom-multiselect[data-filter-name="${field}"] input[type='checkbox']`).forEach(cb => cb.checked = false);
       document.querySelector(`.custom-multiselect[data-filter-name="${field}"] .dropdown-btn`).textContent = '0 selected';
     });
@@ -170,10 +215,27 @@
     const searchInput = dropdown.querySelector('.search-box input');
 
     btn.addEventListener('click', () => dropdown.classList.toggle('show'));
+
     function updateCount() {
       const count = [...checkboxes].filter(cb => cb.checked && cb.value !== '__all__').length;
       btn.textContent = `${count} selected`;
     }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', () => {
+      const selectAll = dropdown.querySelector('.select-all');
+      if (cb.classList.contains('select-all')) {
+        const allChecked = cb.checked;
+        checkboxes.forEach(item => {
+          if (item !== cb) item.checked = allChecked;
+        });
+      } else {
+        const allOthers = Array.from(checkboxes).filter(item => !item.classList.contains('select-all'));
+        const allChecked = allOthers.every(item => item.checked);
+        selectAll.checked = allChecked;
+      }
+      updateCount();
+    }));
+
     searchInput.addEventListener('input', () => {
       const filter = searchInput.value.toLowerCase();
       dropdown.querySelectorAll('label').forEach(label => {
@@ -181,13 +243,7 @@
         label.style.display = text.includes(filter) ? '' : 'none';
       });
     });
-    checkboxes.forEach(cb => cb.addEventListener('change', () => {
-      if (cb.classList.contains('select-all')) {
-        const allChecked = cb.checked;
-        checkboxes.forEach(item => { if (item !== cb) item.checked = allChecked; });
-      }
-      updateCount();
-    }));
+
     updateCount();
   });
 </script>
