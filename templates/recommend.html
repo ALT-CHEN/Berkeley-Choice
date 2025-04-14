@@ -93,6 +93,48 @@
     border-bottom: 2px solid rgba(255, 255, 255, 0.5);
     background: transparent;
   }
+  .form-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 2rem;
+    color: #facc15;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+  }
+  .form-section-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #ffffff;
+    border-left: 4px solid #facc15;
+    padding-left: 0.75rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  .btn-submit {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.75rem 2rem;
+    background-color: #facc15;
+    color: #111;
+    border: none;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+  }
+
+  .btn-submit:hover {
+    background-color: #ffe26b;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
+  }
+
+  .btn-submit:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
+  }
+
 </style>
 {% endblock %}
 
@@ -104,12 +146,12 @@
 <div class="scroll-area">
 <div class="container my-5">
   <div class="form-container">
-    <h2 class="text-center mb-4">Course Recommendation Form</h2>
+    <h2 class="text-center mb-4 form-title">Course Recommendation Form</h2>
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('recommendation.recommend') }}">
 
       <!-- 🎓 Academics -->
       <div class="form-section">
-        <h4>Academics</h4>
+        <h4 class="form-section-title">Academics</h4>
         <div class="mb-3">
           <label class="form-label">Degree</label>
           <select class="form-select" name="degree_names">
@@ -158,7 +200,7 @@
 
       <!-- 💼 Work Experience -->
       <div class="form-section">
-        <h4>Work Experience</h4>
+        <h4 class="form-section-title">Work Experience</h4>
         <div class="mb-3">
           <label class="form-label">Years of Work Experience</label>
           <input type="number" class="form-control" name="experience" min="0">
@@ -179,7 +221,7 @@
 
       <!-- 🧍 Additional Info -->
       <div class="form-section">
-        <h4>Additional Information</h4>
+        <h4 class="form-section-title">Additional Information</h4>
         <div class="mb-3">
           <label class="form-label">Age</label>
           <input type="number" class="form-control" name="age" min="0" max="120">
@@ -216,7 +258,7 @@
 
       <!-- 🎯 Recommendation Preference Slider -->
       <div class="form-section">
-        <h4>Recommendation Preference</h4>
+        <h4 class="form-section-title">Recommendation Preference</h4>
         <div class="mb-3 text-white">
           <label class="form-label mb-3 text-center d-block" style="font-weight: 500;">
             How closely do you want your future jobs to align with your academic background?
@@ -234,7 +276,7 @@
 
       <!-- 📎 Resume Upload -->
       <div class="form-section">
-        <h4>Resume Upload</h4>
+        <h4 class="form-section-title">Resume Upload</h4>
         <div class="mb-3">
           <label class="form-label">Upload Resume (PDF)</label>
           <input type="file" class="form-control" name="resume" accept="application/pdf">
@@ -246,8 +288,8 @@
         </div>
       </div>
 
-      <div class="text-center">
-        <button type="submit" class="btn btn-primary btn-lg btn-submit">Submit</button>
+      <div class="text-center mt-4">
+        <button type="submit" class="btn-submit">Get Recommendation</button>
       </div>
 
     </form>

@@ -4,12 +4,41 @@
 {% block css %}
 <style>
   .form-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 2.5rem;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 4rem 5rem;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
     color: white;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .form-container h2 {
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
+    color: #facc15;
+  }
+
+  .contact-box {
+    padding: 1.5rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .contact-box:first-child {
+    border-left: none;
+  }
+
+  .card {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 220px;
+  }
+
+  .card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
   }
 
   .card img {
@@ -18,17 +47,24 @@
     background-color: #fff;
   }
 
-  .card-body {
-    padding-top: 0.5rem;
+  .card-body h6 {
+    color: #fff;
   }
 
-  .contact-box {
-    padding: 1rem 2rem;
-    border-left: 1px solid rgba(255, 255, 255, 0.15);
+  .card-body .card-text {
+    font-size: 0.85rem;
   }
 
-  .contact-box:first-child {
-    border-left: none;
+  .bg-image-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+                url("{{ url_for('static', filename='images/UCB-BG.jpg') }}") center/cover no-repeat;
+    border-radius: 20px;
+    padding: 4rem 5rem;
+    backdrop-filter: blur(8px);
+    color: white;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.05);
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   @media (max-width: 768px) {
@@ -45,25 +81,22 @@
 {% endblock %}
 
 {% block body %}
-<div id="fullpage">
-  <!-- 🔹 Full Height Centered Content Wrapper -->
-  <div class="container min-vh-100 d-flex flex-column justify-content-center">
+<div class="scroll-area">
+  <div class="container min-vh-100 d-flex flex-column justify-content-center py-5">
 
-    <!-- 🔹 IEOR + MAnalytics Contact Section -->
+    <!-- 🔹 Contact Info Section with Background -->
     <section class="mb-5">
-      <div class="form-container">
+      <div class="bg-image-section">
         <h2 class="fw-bold text-center mb-5">Contact Our Departments</h2>
         <div class="row">
-          <!-- IEOR -->
           <div class="col-md-6 contact-box text-center">
-            <h4 class="fw-bold mb-3">Industrial Engineering & Operations Research</h4>
+            <h4 class="fw-bold mb-3 text-warning">Industrial Engineering & Operations Research</h4>
             <p>Email: <a href="mailto:ieor@berkeley.edu" class="text-warning">ieor@berkeley.edu</a></p>
             <p>Phone: (510) 642-5484</p>
             <p>Office: Etcheverry Hall, Room 4147</p>
           </div>
-          <!-- Master of Analytics -->
           <div class="col-md-6 contact-box text-center">
-            <h4 class="fw-bold mb-3">Master of Analytics Program</h4>
+            <h4 class="fw-bold mb-3 text-warning">Master of Analytics Program</h4>
             <p>Email: <a href="mailto:analytics@berkeley.edu" class="text-warning">analytics@berkeley.edu</a></p>
             <p>Phone: (510) 642-9988</p>
             <p>Office: Berkeley Way West, Room 5100</p>
@@ -72,32 +105,57 @@
       </div>
     </section>
 
-    <!-- 👥 Meet Our Team -->
-    <section class="mb-5">
-      <div class="form-container">
-        <h2 class="fw-bold text-center mb-5">Meet Our Team</h2>
-        <div class="row justify-content-center g-4">
-          {% for member in [
-            {'name': 'Linzhe Wu', 'role': 'Product Lead', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'},
-            {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'chenyang_wang.jpg', 'email': 'brian.berkeley@gmail.com'},
-            {'name': 'Anzhou Wang', 'role': 'AI/ML Engineer', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
-            {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
-            {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'}
-          ] %}
-          <div class="col-6 col-md-4 col-lg-2 d-flex">
-            <div class="card border-0 shadow-sm w-100 text-center" style="background-color: rgba(255,255,255,0.05); color: white;">
-              <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}" class="card-img-top rounded-circle mt-3 mx-auto" style="width: 100px; height: 100px; object-fit: cover;" alt="{{ member.name }}">
-              <div class="card-body">
-                <h6 class="card-title mb-1">{{ member.name }}</h6>
-                <p class="card-text text-warning small mb-2">{{ member.role }}</p>
-                <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none d-block"> {{ member.email }} </a>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
+<!-- 👥 Meet Our Team -->
+<section class="mb-5">
+  <div class="form-container">
+    <h2 class="fw-bold text-center mb-5">Meet Our Team</h2>
+
+    <!-- Row 1: 2 Members, evenly spaced -->
+    <div class="d-flex justify-content-evenly w-100 mb-5">
+      {% for member in [
+        {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
+        {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'}
+      ] %}
+      <div class="card text-center p-3" style="width: 220px;">
+        <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
+             class="card-img-top rounded-circle mx-auto mb-2"
+             style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #facc15;"
+             alt="{{ member.name }}">
+        <div class="card-body p-2">
+          <h6 class="card-title text-white mb-1">{{ member.name }}</h6>
+          <p class="card-text text-warning small mb-2">{{ member.role }}</p>
+          <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none">{{ member.email }}</a>
         </div>
       </div>
-    </section>
+      {% endfor %}
+    </div>
+
+    <!-- Row 2: 3 Members, evenly spaced with wider gaps -->
+    <div class="d-flex justify-content-evenly w-100" style="column-gap: 5rem;">
+      {% for member in [
+        {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'chenyang_wang.jpg', 'email': 'brian.berkeley@gmail.com'},
+        {'name': 'Anzhou Wang', 'role': 'Project Lead', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
+        {'name': 'Linzhe Wu', 'role': 'AI/ML Engineer', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'}
+      ] %}
+      <div class="card text-center p-3" style="width: 220px;">
+        <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
+             class="card-img-top rounded-circle mx-auto mb-2"
+             style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #facc15;"
+             alt="{{ member.name }}">
+        <div class="card-body p-2">
+          <h6 class="card-title text-white mb-1">{{ member.name }}</h6>
+          <p class="card-text text-warning small mb-2">{{ member.role }}</p>
+          <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none">{{ member.email }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+
+
 
   </div>
 </div>
