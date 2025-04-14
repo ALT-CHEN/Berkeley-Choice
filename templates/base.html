@@ -96,9 +96,14 @@
     }
 
     .nav-link {
-      color: white;
+      color: white !important;
       position: relative;
       transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: white !important;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
     }
 
     .nav-link::after {
@@ -132,34 +137,33 @@
     <div class="spinner-border text-warning" style="width: 3rem; height: 3rem;" role="status"></div>
   </div>
 
-  <!-- 🧭 Navbar -->
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container-fluid">
+  <nav class="navbar navbar-expand-lg sticky-top position-relative">
+    <div class="container-fluid position-relative">
+      <!-- 🔹 Left: Logo -->
       <a class="navbar-brand fw-bold text-white px-4 fs-4 d-flex align-items-center gap-2" href="/">
         <img src="{{ url_for('static', filename='images/berkeley_choice_logo.png') }}" alt="Logo" style="height: 40px;">
         Berkeley Choice
       </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto d-flex justify-content-center gap-5">
+  
+      <!-- 🔹 Center: Nav links wrapped in absolute-centered container -->
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <ul class="navbar-nav flex-row gap-5">
           <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="/recommend">Recommendations</a></li>
           <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
           <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
         </ul>
-        <div class="d-flex">
-          {% if session.get('username') %}
-            <span class="navbar-text text-white me-2">Hi, {{ session['username'] }}</span>
-            <a class="btn btn-outline-light" href="/logout">Logout</a>
-          {% else %}
-            <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Log In</button>
-            <button class="btn btn-outline-light signup-btn" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
-          {% endif %}
-        </div>
+      </div>
+  
+      <!-- 🔹 Right: Login/Signup or Greeting -->
+      <div class="d-flex ms-auto">
+        {% if session.get('username') %}
+          <span class="navbar-text text-white me-2">Hi, {{ session['username'] }}</span>
+          <a class="btn btn-outline-light" href="/logout">Logout</a>
+        {% else %}
+          <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Log In</button>
+          <button class="btn btn-outline-light signup-btn" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+        {% endif %}
       </div>
     </div>
   </nav>
@@ -287,7 +291,9 @@
       autoScrolling: true,
       navigation: true,
       navigationPosition: 'right',
-      scrollOverflow: true
+      scrollOverflow: true,
+      loopBottom: true,   // Allow looping to the top after the last section
+      loopTop: true       // Allow looping back to bottom
     });
   </script>
 </body>

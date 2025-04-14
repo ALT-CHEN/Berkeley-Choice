@@ -1,60 +1,113 @@
-
 {% extends 'base.html' %}
 {% block title %}About{% endblock %}
 
 {% block body %}
-
 <style>
-    body {
-        color: white;
-    }
+  .section-panel {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .section-panel:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    transform: scale(1.01);
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #facc15;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: #ffffffcc;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-panel ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .section-panel li::before {
+    content: "✔️";
+    margin-right: 0.5rem;
+    color: #facc15;
+  }
+
+  .btn-glow {
+    background-color: #facc15;
+    color: #000;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 12px #facc15aa;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-glow:hover {
+    background-color: #ffdd44;
+    box-shadow: 0 0 20px #facc15;
+  }
 </style>
 
 <div class="scroll-area">
-<!-- Logo and Introduction -->
-<section class="text-center p-5">
-    <img src="/static/images/berkeley_choice_logo.png" alt="Berkeley Choice Logo" class="mb-3" style="max-height: 210px;">
-    <h1 class="fw-bold text-white">Why We Built Berkeley Choice?</h1>
-    <br>
+<div class="container py-5">
+  <!-- Logo + Intro -->
+  <div class="text-center mb-5">
+    <img src="/static/images/berkeley_choice_logo.png" alt="Berkeley Choice Logo" style="max-height: 160px;">
+    <h1 class="text-white mt-3">Berkeley Choice</h1>
+    <p class="text-white-50 fs-5">An AI-powered course recommendation system tailored to each UC Berkeley student’s academic profile and career goals.</p>
+  </div>
 
+  <!-- Problem & Purpose -->
+  <div class="section-panel">
+    <div class="section-title">🎯 Why We Built This</div>
+    <p class="section-subtitle">
+      Choosing the right courses is challenging. With thousands of options and ever-evolving career demands, students often lack guidance on which classes will truly support their future.
+      <strong>Berkeley Choice bridges this gap through intelligent, skill-based recommendations personalized for every student.</strong>
+    </p>
+  </div>
 
-<!-- Why We Built Berkeley Choice -->
-<section class="container-fluid py-5" style="background: linear-gradient(135deg, #15202B, #1c3c63); color: white;">
-    <div class="container">
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-8 text-center">
-                <p class="lead">At Berkeley, students face an overwhelming number of course options, making it difficult to select those that align with personal goals and career aspirations.</p>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-md-4 mb-3">
-                <div class="p-4 bg-dark rounded shadow-sm h-100">
-                    <h5>🎯 Career-Aligned Courses</h5>
-                    <p>We help students find courses that match their future careers.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="p-4 bg-dark rounded shadow-sm h-100">
-                    <h5>🔍 Understand Skill Gaps</h5>
-                    <p>Our platform identifies which skills are needed and which courses teach them.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="p-4 bg-dark rounded shadow-sm h-100">
-                    <h5>📚 Smart Course Navigation</h5>
-                    <p>Using AI, we help students filter through hundreds of course options with ease.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+  <!-- 🚀 Project Pipeline -->
+  <div class="section-panel">
+    <div class="section-title">🚀 Our AI-Driven Recommendation Pipeline</div>
+    <p class="section-subtitle">Here’s how we turn student data into precise, personalized course recommendations:</p>
+    <ul>
+      <li><strong>Skill Clustering:</strong> We analyzed 10,000+ raw skills from industry/job data and grouped them into ~800 skill clusters using advanced clustering algorithms. These clusters form a universal skill vocabulary for mapping job roles.</li>
+      <li><strong>Neural Skill Prediction:</strong> A neural network trained on 10,000+ successful UC Berkeley student profiles predicts the most relevant skill clusters based on a student's academic background, past experience, and career aspirations — achieving over <strong>90% accuracy</strong> and <strong>high F1-scores</strong>.</li>
+      <li><strong>Semantic Matching via Sentence-BERT:</strong> Skill clusters and course descriptions are embedded using a fine-tuned Sentence-BERT model under a semi-supervised learning framework, enabling deep understanding of course relevance.</li>
+      <li><strong>Personalized Course Matching:</strong> Each student’s skill profile is compared against 10,000+ UC Berkeley courses to identify the <strong>top matches</strong>, providing transparent, data-driven suggestions tailored just for them.</li>
+    </ul>
+  </div>
 
-<!-- What's Next Section with White Background -->
-<section class="text-center p-5" >
-    <h2 class="fw-bold text-white">What's Next?</h2>
-    <p class="lead text-white">We’re continuously enhancing our AI to deliver even smarter, more personalized course recommendations. Want to collaborate or give feedback?</p>
-    <a href="/contact" class="btn btn-primary btn-lg mt-3">Contact Us</a>
-</section>
+  <!-- Unique Value -->
+  <div class="section-panel">
+    <div class="section-title">🎯 What Makes Us Different?</div>
+    <ul>
+      <li>🔬 <strong>Personalized Recommendations:</strong> No two students are treated the same. Your unique goals and background shape your results.</li>
+      <li>📊 <strong>Data-Driven Insights:</strong> We use real alumni success profiles to guide and validate every recommendation.</li>
+      <li>💬 <strong>Explainable Matches:</strong> Each course includes the reason it's recommended — so you know how it supports your skills and goals.</li>
+    </ul>
+  </div>
+
+  <!-- Future Direction -->
+  <div class="section-panel">
+    <div class="section-title">🔧 What’s Next?</div>
+    <p class="section-subtitle">
+      We’re expanding to more universities and refining our models to include real-time job market insights and employer demand. Our mission is to empower every student with data-backed academic decisions.
+    </p>
+    <a href="/contact" class="btn btn-glow mt-3">Partner with Us</a>
+  </div>
+</div>
 </div>
 
 {% endblock %}
