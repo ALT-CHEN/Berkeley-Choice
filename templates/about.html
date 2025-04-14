@@ -1,50 +1,60 @@
+
 {% extends 'base.html' %}
 {% block title %}About{% endblock %}
 
-{% block css %}
-<style>
-  .about-container {
-    max-width: 960px;
-    margin: 4rem auto;
-    padding: 2.5rem;
-    background-color: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    color: white;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(250, 204, 21, 0.3);
-  }
-
-  .about-container h1 {
-    font-size: 2.75rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: #facc15;
-    text-align: center;
-    text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
-  }
-
-  .about-container p {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    margin-bottom: 1rem;
-  }
-
-  .highlight {
-    color: #facc15;
-    font-weight: 600;
-  }
-
-  .glow-line {
-    height: 4px;
-    background: linear-gradient(90deg, #facc15, #ffbb00, #facc15);
-    box-shadow: 0 0 10px rgba(250, 204, 21, 0.7);
-    border-radius: 10px;
-    margin: 2rem 0;
-  }
-</style>
-{% endblock %}
-
 {% block body %}
+
+<style>
+    body {
+        color: white;
+    }
+</style>
+
+<div class="scroll-area">
+<!-- Logo and Introduction -->
+<section class="text-center p-5">
+    <img src="/static/images/berkeley_choice_logo.png" alt="Berkeley Choice Logo" class="mb-3" style="max-height: 210px;">
+    <h1 class="fw-bold text-white">Why We Built Berkeley Choice?</h1>
+    <br>
+
+
+<!-- Why We Built Berkeley Choice -->
+<section class="container-fluid py-5" style="background: linear-gradient(135deg, #15202B, #1c3c63); color: white;">
+    <div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8 text-center">
+                <p class="lead">At Berkeley, students face an overwhelming number of course options, making it difficult to select those that align with personal goals and career aspirations.</p>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div class="p-4 bg-dark rounded shadow-sm h-100">
+                    <h5>🎯 Career-Aligned Courses</h5>
+                    <p>We help students find courses that match their future careers.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="p-4 bg-dark rounded shadow-sm h-100">
+                    <h5>🔍 Understand Skill Gaps</h5>
+                    <p>Our platform identifies which skills are needed and which courses teach them.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="p-4 bg-dark rounded shadow-sm h-100">
+                    <h5>📚 Smart Course Navigation</h5>
+                    <p>Using AI, we help students filter through hundreds of course options with ease.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- What's Next Section with White Background -->
+<section class="text-center p-5" >
+    <h2 class="fw-bold text-white">What's Next?</h2>
+    <p class="lead text-white">We’re continuously enhancing our AI to deliver even smarter, more personalized course recommendations. Want to collaborate or give feedback?</p>
+    <a href="/contact" class="btn btn-primary btn-lg mt-3">Contact Us</a>
+</section>
+</div>
 
 {% endblock %}

@@ -21,49 +21,84 @@
   .card-body {
     padding-top: 0.5rem;
   }
+
+  .contact-box {
+    padding: 1rem 2rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .contact-box:first-child {
+    border-left: none;
+  }
+
+  @media (max-width: 768px) {
+    .contact-box {
+      border-left: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .contact-box:first-child {
+      border-top: none;
+    }
+  }
 </style>
 {% endblock %}
 
 {% block body %}
-<!-- 🔹 IEOR Department Contact -->
-<section class="container my-5">
-  <div class="form-container">
-    <h2 class="fw-bold text-center mb-4">Contact IEOR Department</h2>
-    <div class="row justify-content-center">
-      <div class="col-md-8 text-center">
-        <h5 class="mb-2">Industrial Engineering & Operations Research</h5>
-        <p>Email: <a href="mailto:ieor@berkeley.edu" class="text-warning">ieor@berkeley.edu</a></p>
-        <p>Phone: (510) 642-5484</p>
-        <p>Office: Etcheverry Hall, Room 4147</p>
-      </div>
-    </div>
-  </div>
-</section>
+<div id="fullpage">
+  <!-- 🔹 Full Height Centered Content Wrapper -->
+  <div class="container min-vh-100 d-flex flex-column justify-content-center">
 
-<!-- 👥 Meet Our Team -->
-<section class="container my-5">
-  <div class="form-container">
-    <h2 class="fw-bold text-center mb-5">Meet Our Team</h2>
-    <div class="row justify-content-center g-4">
-      {% for member in [
-        {'name': 'Zixuan Li', 'role': 'Product Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'},
-        {'name': 'Chenyang Wang', 'role': 'Machine Learning Engineer', 'img': 'brian.jpg', 'email': 'brian.berkeley@gmail.com'},
-        {'name': 'Anzhou Wang', 'role': 'Data Scientist', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
-        {'name': 'Huei-Sin Liu', 'role': 'Frontend Developer', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
-        {'name': 'Linzhe Wu', 'role': 'Backend Developer', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'}
-      ] %}
-      <div class="col-6 col-md-4 col-lg-2 d-flex">
-        <div class="card border-0 shadow-sm w-100 text-center" style="background-color: rgba(255,255,255,0.05); color: white;">
-          <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}" class="card-img-top rounded-circle mt-3 mx-auto" style="width: 100px; height: 100px; object-fit: cover;" alt="{{ member.name }}">
-          <div class="card-body">
-            <h6 class="card-title mb-1">{{ member.name }}</h6>
-            <p class="card-text text-warning small mb-2">{{ member.role }}</p>
-            <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none d-block"> {{ member.email }} </a>
+    <!-- 🔹 IEOR + MAnalytics Contact Section -->
+    <section class="mb-5">
+      <div class="form-container">
+        <h2 class="fw-bold text-center mb-5">Contact Our Departments</h2>
+        <div class="row">
+          <!-- IEOR -->
+          <div class="col-md-6 contact-box text-center">
+            <h4 class="fw-bold mb-3">Industrial Engineering & Operations Research</h4>
+            <p>Email: <a href="mailto:ieor@berkeley.edu" class="text-warning">ieor@berkeley.edu</a></p>
+            <p>Phone: (510) 642-5484</p>
+            <p>Office: Etcheverry Hall, Room 4147</p>
+          </div>
+          <!-- Master of Analytics -->
+          <div class="col-md-6 contact-box text-center">
+            <h4 class="fw-bold mb-3">Master of Analytics Program</h4>
+            <p>Email: <a href="mailto:analytics@berkeley.edu" class="text-warning">analytics@berkeley.edu</a></p>
+            <p>Phone: (510) 642-9988</p>
+            <p>Office: Berkeley Way West, Room 5100</p>
           </div>
         </div>
       </div>
-      {% endfor %}
-    </div>
+    </section>
+
+    <!-- 👥 Meet Our Team -->
+    <section class="mb-5">
+      <div class="form-container">
+        <h2 class="fw-bold text-center mb-5">Meet Our Team</h2>
+        <div class="row justify-content-center g-4">
+          {% for member in [
+            {'name': 'Linzhe Wu', 'role': 'Product Lead', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'},
+            {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'brian.jpg', 'email': 'brian.berkeley@gmail.com'},
+            {'name': 'Anzhou Wang', 'role': 'AI/ML Engineer', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
+            {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
+            {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'}
+          ] %}
+          <div class="col-6 col-md-4 col-lg-2 d-flex">
+            <div class="card border-0 shadow-sm w-100 text-center" style="background-color: rgba(255,255,255,0.05); color: white;">
+              <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}" class="card-img-top rounded-circle mt-3 mx-auto" style="width: 100px; height: 100px; object-fit: cover;" alt="{{ member.name }}">
+              <div class="card-body">
+                <h6 class="card-title mb-1">{{ member.name }}</h6>
+                <p class="card-text text-warning small mb-2">{{ member.role }}</p>
+                <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none d-block"> {{ member.email }} </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
   </div>
-</section>
+</div>
 {% endblock %}
