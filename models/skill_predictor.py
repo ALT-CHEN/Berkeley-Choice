@@ -2,6 +2,7 @@
 import pandas as pd
 import pickle
 from tensorflow.keras.models import load_model
+from tensorflow import keras
 
 # Load everything once
 with open('models/scaler.pkl', 'rb') as f:
@@ -16,7 +17,7 @@ with open('models/skill_columns.pkl', 'rb') as f:
 with open('models/fusion_logistic_model.pkl', 'rb') as f:
     fusion_model = pickle.load(f)
 
-mlp_model = load_model('models/best_mlp_model.h5')
+mlp_model = keras.models.load_model("models/best_mlp_model.keras")
 similarity_df = pd.read_csv('data/new_skill_course_similarity.csv')
 
 # Helper functions
