@@ -113,7 +113,7 @@ def generate_course_recommendations(form_data, extracted_skills, n=20):
         .drop_duplicates(subset="Course_Code", keep="first")
     )
 
-    test_df = top_recommendations.head(n)
-    test_df.to_csv('test1.csv')
+    # test_df = top_recommendations.head(n)
+    # test_df.to_csv('test1.csv')
 
     return top_recommendations.head(n)
