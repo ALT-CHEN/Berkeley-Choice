@@ -100,11 +100,20 @@ def generate_course_recommendations(form_data, extracted_skills, n=20):
     )[:, 1]
 
 
-    # Format and sort the output
-    top_recommendations = merged[[
-        "Course_Code", "Course_Title", "Cluster", "skill_rank",
-        "probability", "Cosine_Similarity", "predicted_score"
-    ]].sort_values(by="predicted_score", ascending=False)
+    # Clean and normalize Course_Code
+    merged["Course_Code"] = merged["Course_Code"].astype(str).str.strip().str.replace('\xa0', ' ', regex=False)
 
-   
+    # Format, sort, and remove duplicates
+    top_recommendations = (
+        merged[[
+            "Course_Code", "Course_Title", "Cluster", "skill_rank",
+            "probability", "Cosine_Similarity", "predicted_score"
+        ]]
+        .sort_values(by="predicted_score", ascending=False)
+        .drop_duplicates(subset="Course_Code", keep="first")
+    )
+
+    test_df = top_recommendations.head(n)
+    test_df.to_csv('test1.csv')
+
     return top_recommendations.head(n)

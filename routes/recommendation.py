@@ -80,6 +80,9 @@ def result():
 
     # 🔗 Merge recommended course codes with full course info
     full_courses = recommended_df.merge(df, on="course_code", how="left")
+    full_courses = full_courses.drop_duplicates(subset="Course_Code", keep="first")
+
+    # full_courses.to_csv('test.csv')
 
     # Convert to dictionary format for rendering in Jinja
     recommended_courses = full_courses.to_dict(orient="records")
