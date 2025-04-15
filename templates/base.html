@@ -1,17 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}{% endblock %}</title>
 
   <!-- CSS & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
 
   {% block css %}{% endblock %}
 
@@ -22,7 +21,7 @@
       height: 100%;
       font-family: 'Roboto', sans-serif;
       background: transparent;
-      overflow: hidden; /* disable full-page scroll */
+      overflow: hidden;
       color: white;
     }
 
@@ -38,7 +37,7 @@
     }
 
     #vanta-bg > .scroll-area {
-      height: calc(100vh - 72px); /* navbar height */
+      height: calc(100vh - 72px);
       overflow-y: auto;
       padding: 1rem;
       position: relative;
@@ -46,7 +45,6 @@
       scrollbar-gutter: stable overlay;
     }
 
-    /* Custom Scrollbar Style */
     .scroll-area::-webkit-scrollbar {
       width: 10px;
     }
@@ -125,11 +123,31 @@
       transform: scaleX(1);
     }
 
-    .signup-btn:hover {
-      background-color: #facc15;
-      color: #1f2937;
-      border-color: #facc15;
+    /* Button Styling */
+    .btn-outline-light {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+      font-weight: 500;
       transition: all 0.3s ease;
+    }
+
+    .btn-outline-light:hover {
+      background-color: rgba(255, 255, 255, 0.85);
+      color: #1f1f1f;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-warning {
+      background-color: #facc15;
+      border: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-warning:hover {
+      background-color: #ffe580;
+      color: #000;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
     }
   </style>
 </head>
@@ -142,13 +160,13 @@
 
   <nav class="navbar navbar-expand-lg sticky-top position-relative">
     <div class="container-fluid position-relative">
-      <!-- 🔹 Left: Logo -->
+      <!-- Logo -->
       <a class="navbar-brand fw-bold text-white px-4 fs-4 d-flex align-items-center gap-2" href="/">
-        <img src="{{ url_for('static', filename='images/berkeley_choice_logo.png') }}" alt="Logo" style="height: 40px;">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 40px;">
         Berkeley Choice
       </a>
-  
-      <!-- 🔹 Center: Nav links wrapped in absolute-centered container -->
+
+      <!-- Center Nav -->
       <div class="position-absolute top-50 start-50 translate-middle">
         <ul class="navbar-nav flex-row gap-5">
           <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
@@ -157,21 +175,21 @@
           <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
         </ul>
       </div>
-  
-      <!-- 🔹 Right: Login/Signup or Greeting -->
-      <div class="d-flex ms-auto">
+
+      <!-- Right Side: Buttons -->
+      <div class="d-flex ms-auto align-items-center gap-2">
         {% if session.get('username') %}
-          <span class="navbar-text text-white me-2">Hi, {{ session['username'] }}</span>
+          <span class="text-white me-2">Hi, {{ session['username'] }}</span>
           <a class="btn btn-outline-light" href="/logout">Logout</a>
         {% else %}
-          <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Log In</button>
-          <button class="btn btn-outline-light signup-btn" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+          <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Log In</button>
+          <button class="btn btn-warning text-dark fw-semibold" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
         {% endif %}
       </div>
     </div>
   </nav>
 
-  <!-- 🔔 Flash messages -->
+  <!-- Flash messages -->
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -185,7 +203,7 @@
     {% endwith %}
   </div>
 
-  <!-- 🌌 Background & Scrollable Content -->
+  <!-- Background & Scrollable Content -->
   <div id="vanta-bg">
     {% block body %}{% endblock %}
   </div>
@@ -295,8 +313,8 @@
       navigation: true,
       navigationPosition: 'right',
       scrollOverflow: true,
-      loopBottom: true,   // Allow looping to the top after the last section
-      loopTop: true       // Allow looping back to bottom
+      loopBottom: true,
+      loopTop: true
     });
   </script>
 </body>

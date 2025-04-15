@@ -8,7 +8,7 @@
     backdrop-filter: blur(5px);
     border-radius: 20px;
     padding: 4rem 5rem;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 25px rgba(255, 217, 0, 0.45);
     color: white;
     max-width: 1200px;
     margin: 0 auto;
@@ -38,7 +38,6 @@
 
   .card:hover {
     transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
   }
 
   .card img {
@@ -62,7 +61,7 @@
     padding: 4rem 5rem;
     backdrop-filter: blur(8px);
     color: white;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.05);
+    box-shadow: 0 0 25px rgba(255, 217, 0, 0.45);
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -105,57 +104,58 @@
       </div>
     </section>
 
-<!-- 👥 Meet Our Team -->
-<section class="mb-5">
-  <div class="form-container">
-    <h2 class="fw-bold text-center mb-5">Meet Our Team</h2>
+    <!-- 👥 Meet Our Team -->
+    <section class="mb-5">
+      <div class="form-container">
+        <h2 class="fw-bold text-center mb-3">Meet Our Team</h2>
+        <p class="text-center text-light mb-4" style="font-size: 1rem;">
+          Our team blends expertise in data science, UX, AI, and software development to build tailored solutions for Berkeley students.
+        </p>
+        <hr style="border: 0; height: 2px; width: 99%; margin: 0 auto 3rem; background: linear-gradient(to right, transparent, #facc15, transparent); border-radius: 2px;">
 
-    <!-- Row 1: 2 Members, evenly spaced -->
-    <div class="d-flex justify-content-evenly w-100 mb-5">
-      {% for member in [
-        {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
-        {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'}
-      ] %}
-      <div class="card text-center p-3" style="width: 220px;">
-        <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
-             class="card-img-top rounded-circle mx-auto mb-2"
-             style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #facc15;"
-             alt="{{ member.name }}">
-        <div class="card-body p-2">
-          <h6 class="card-title text-white mb-1">{{ member.name }}</h6>
-          <p class="card-text text-warning small mb-2">{{ member.role }}</p>
-          <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none">{{ member.email }}</a>
+
+        <!-- Row 1: 2 Members -->
+        <div class="d-flex justify-content-evenly w-100 mb-5">
+          {% for member in [
+            {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'daniel.jpg', 'email': 'daniel.berkeley@gmail.com'},
+            {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'}
+          ] %}
+          <div class="card text-center p-3" style="width: 220px;">
+            <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
+                 class="card-img-top rounded-circle mx-auto mb-2"
+                 style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #facc15;"
+                 alt="{{ member.name }}">
+            <div class="card-body p-2">
+              <h6 class="card-title text-white mb-1">{{ member.name }}</h6>
+              <p class="card-text text-warning small mb-2">{{ member.role }}</p>
+              <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none">{{ member.email }}</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Row 2: 3 Members -->
+        <div class="d-flex justify-content-evenly w-100" style="column-gap: 5rem;">
+          {% for member in [
+            {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'chenyang_wang.jpg', 'email': 'brian.berkeley@gmail.com'},
+            {'name': 'Anzhou Wang', 'role': 'Project Lead', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
+            {'name': 'Linzhe Wu', 'role': 'AI/ML Engineer', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'}
+          ] %}
+          <div class="card text-center p-3" style="width: 220px;">
+            <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
+                 class="card-img-top rounded-circle mx-auto mb-2"
+                 style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #facc15;"
+                 alt="{{ member.name }}">
+            <div class="card-body p-2">
+              <h6 class="card-title text-white mb-1">{{ member.name }}</h6>
+              <p class="card-text text-warning small mb-2">{{ member.role }}</p>
+              <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none">{{ member.email }}</a>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
-      {% endfor %}
-    </div>
-
-    <!-- Row 2: 3 Members, evenly spaced with wider gaps -->
-    <div class="d-flex justify-content-evenly w-100" style="column-gap: 5rem;">
-      {% for member in [
-        {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'chenyang_wang.jpg', 'email': 'brian.berkeley@gmail.com'},
-        {'name': 'Anzhou Wang', 'role': 'Project Lead', 'img': 'catherine.jpg', 'email': 'catherine.berkeley@gmail.com'},
-        {'name': 'Linzhe Wu', 'role': 'AI/ML Engineer', 'img': 'emily.jpg', 'email': 'emily.berkeley@gmail.com'}
-      ] %}
-      <div class="card text-center p-3" style="width: 220px;">
-        <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
-             class="card-img-top rounded-circle mx-auto mb-2"
-             style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #facc15;"
-             alt="{{ member.name }}">
-        <div class="card-body p-2">
-          <h6 class="card-title text-white mb-1">{{ member.name }}</h6>
-          <p class="card-text text-warning small mb-2">{{ member.role }}</p>
-          <a href="mailto:{{ member.email }}" class="text-light small text-decoration-none">{{ member.email }}</a>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-
-
-
+    </section>
 
   </div>
 </div>
