@@ -2,23 +2,6 @@
 import pandas as pd
 import pickle
 from tensorflow.keras.models import load_model
-from tensorflow import keras
-
-# Load everything once
-with open('models/scaler.pkl', 'rb') as f:
-    scaler = pickle.load(f)
-
-with open('models/reference_columns.pkl', 'rb') as f:
-    reference_columns = pickle.load(f)
-
-with open('models/skill_columns.pkl', 'rb') as f:
-    skill_columns = pickle.load(f)
-
-with open('models/fusion_logistic_model.pkl', 'rb') as f:
-    fusion_model = pickle.load(f)
-
-mlp_model = keras.models.load_model("models/best_mlp_model.keras")
-similarity_df = pd.read_csv('data/new_skill_course_similarity.csv')
 
 # Helper functions
 def safe_int(val, default=-1):
@@ -40,9 +23,9 @@ def safe_str(val, default='Unknown'):
     else:
         return val
 
-def generate_course_recommendations(form_data, extracted_skills):
+def generate_course_recommendations(form_data, extracted_skills, n=20):
 
-    profile_data = pd.DataFrame([{
+    raw_profile_df = pd.DataFrame([{
         'degree_names': safe_str(form_data.get('degree_names', 'Unknown')),
         'languages': safe_str(form_data.get('language', 'Unknown')),
         'major1_mapped': safe_str(form_data.get('major1_mapped', 'Unknown')),
@@ -60,72 +43,68 @@ def generate_course_recommendations(form_data, extracted_skills):
         'certification': safe_int(form_data.get('certification', 0), 0),
     }])
 
-    # profile_data_test = pd.DataFrame([{
-    #     'degree_names': 'Bachelor',
-    #     'languages': 'Unknown',
-    #     'major1_mapped': 'Unknown',
-    #     'major2_mapped': 'Unknown',
-    #     'job1': 'Unknown',
-    #     'job2': 'Unknown',
-    #     'job3': 'Unknown',
-    #     'matched_score': 1.0,
-    #     'institution_count': -1,
-    #     'max_passing_year': -1,
-    #     'gpa': -1.0,
-    #     'min_experience_requirement': -1,
-    #     'min_age_requirement': -1,
-    #     'extra_curricular': 0,
-    #     'certification': 0,
-    # }])
 
-    # test = pd.DataFrame([{'result': profile_data.equals(profile_data_test)}])
+    # 1. Fill missing values
+    categorical_cols = ['degree_names', 'languages', 'major1_mapped', 'major2_mapped', 'job1', 'job2', 'job3']
+    numerical_cols = ['matched_score', 'institution_count', 'max_passing_year',
+                      'gpa', 'min_experience_requirement', 'min_age_requirement']
 
-    # test.to_csv('test.csv')
+    raw_profile_df[categorical_cols] = raw_profile_df[categorical_cols].fillna("Unknown")
+    raw_profile_df[numerical_cols] = raw_profile_df[numerical_cols].fillna(-1)
 
-    # Step 2: Predict skills
-    profile_data.fillna("Unknown", inplace=True)
-    encoded = pd.get_dummies(profile_data, columns=[
-        'degree_names', 'languages', 'major1_mapped',
-        'major2_mapped', 'job1', 'job2', 'job3'
-    ])
-    for col in reference_columns:
-        if col not in encoded.columns:
-            encoded[col] = 0
-    encoded = encoded[reference_columns]
-    encoded[['matched_score', 'institution_count', 'max_passing_year',
-             'gpa', 'min_experience_requirement', 'min_age_requirement']] = scaler.transform(
-        encoded[['matched_score', 'institution_count', 'max_passing_year',
-                 'gpa', 'min_experience_requirement', 'min_age_requirement']]
-    )
-    predicted_probs = mlp_model.predict(encoded)
-    df_predictions = pd.DataFrame(predicted_probs, columns=skill_columns)
+    # 2. One-hot encode
+    encoded_profile = pd.get_dummies(raw_profile_df, columns=categorical_cols)
+
+    # 3. Align columns with training set
+    # Load the saved reference column list
+    with open('models/reference_columns.pkl', 'rb') as f:
+        reference_columns = pickle.load(f)
+    encoded_profile = encoded_profile.reindex(columns=reference_columns, fill_value=0)
+
+    # 4. Standardize numeric features
+    with open('models/scaler.pkl', 'rb') as f:
+        scaler = pickle.load(f)
+    encoded_profile[numerical_cols] = scaler.transform(encoded_profile[numerical_cols])
+
+    # --- Load model and make prediction ---
+    mlp_model = load_model("models/best_mlp_model.h5")
+    predictions = mlp_model.predict(encoded_profile)
+
+    ############################################
+    # Load skill column names
+    with open('models/skill_columns.pkl', 'rb') as f:
+        skill_columns = pickle.load(f)
+
+    # Convert prediction array to DataFrame (assuming `pred` is shape (1, n))
+    df_predictions = pd.DataFrame(predictions, columns=skill_columns)
+
+    # Extract top 20 predictions for the single sample
     top_targets = df_predictions.iloc[0].nlargest(20)
 
+    # Long format output
     top20_long = pd.DataFrame({
         'skill_rank': range(1, 21),
         'target': top_targets.index,
         'probability': top_targets.values
     })
 
-    # Step 3: Join with course similarity and rerank
-    merged = top20_long.merge(similarity_df, left_on='target', right_on='Cluster', how='left')
-    merged['score_linear'] = merged['probability'] + merged['Cosine_Similarity']
-    merged['predicted_score'] = fusion_model.predict_proba(
-        merged[['probability', 'Cosine_Similarity', 'skill_rank']]
+    skill_course_similarity = pd.read_csv("data/new_skill_course_similarity.csv")
+    merged = top20_long.merge(skill_course_similarity, left_on="target", right_on="Cluster", how="left")
+    merged["score_linear"] = merged["probability"] + merged["Cosine_Similarity"]
+
+    with open("models/fusion_logistic_model.pkl", "rb") as f:
+        model = pickle.load(f)
+    # Predict the score (probability of label = 1) for each course using the trained model
+    merged["predicted_score"] = model.predict_proba(
+        merged[["probability", "Cosine_Similarity", "skill_rank"]]
     )[:, 1]
-    # Sort by predicted_score first so we keep the best version of each course
-    merged_sorted = merged.sort_values(by='predicted_score', ascending=False)
 
-    # Drop duplicates based on Course_Code
-    unique_courses = merged_sorted.drop_duplicates(subset='Course_Code', keep='first')
 
-    # Now get the top 50
-    top = unique_courses.head(50).copy()
+    # Format and sort the output
+    top_recommendations = merged[[
+        "Course_Code", "Course_Title", "Cluster", "skill_rank",
+        "probability", "Cosine_Similarity", "predicted_score"
+    ]].sort_values(by="predicted_score", ascending=False)
 
-    # Select and reorder columns
-    top = top[[
-        'Course_Code', 'Course_Title', 'Cluster', 'skill_rank',
-        'probability', 'Cosine_Similarity', 'predicted_score'
-    ]]
-
-    return top
+   
+    return top_recommendations.head(n)
