@@ -4,3 +4,6 @@ db = SQLAlchemy()
 
 # Import models to register with SQLAlchemy
 from models.user import User
+
+
+from . import skill_predictor
