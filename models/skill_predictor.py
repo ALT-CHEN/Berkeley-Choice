@@ -19,25 +19,67 @@ with open('models/fusion_logistic_model.pkl', 'rb') as f:
 mlp_model = load_model('models/best_mlp_model.h5')
 similarity_df = pd.read_csv('data/new_skill_course_similarity.csv')
 
+# Helper functions
+def safe_int(val, default=-1):
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return default
+
+def safe_float(val, default=-1.0):
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return default
+
+
+def safe_str(val, default='Unknown'):
+    if val == '':
+        return default
+    else:
+        return val
+
 def generate_course_recommendations(form_data, extracted_skills):
-    # Step 1: Create raw profile DataFrame
+
     profile_data = pd.DataFrame([{
-        'degree_names': form_data.get('degree_names', 'Unknown'),
-        'languages': form_data.get('language', 'Unknown'),
-        'major1_mapped': form_data.get('major1_mapped', 'Unknown'),
-        'major2_mapped': form_data.get('major2_mapped', 'Unknown'),
-        'job1': form_data.get('job1', 'Unknown'),
-        'job2': form_data.get('job2', 'Unknown'),
-        'job3': form_data.get('job3', 'Unknown'),
-        'matched_score': float(form_data.get('matched_score', -1)),
-        'institution_count': int(form_data.get('institution_count', -1)),
-        'max_passing_year': int(form_data.get('max_passing_year', -1)),
-        'gpa': float(form_data.get('gpa', -1)),
-        'min_experience_requirement': int(form_data.get('experience', -1)),
-        'min_age_requirement': int(form_data.get('age', -1)),
-        'extra_curricular': int(form_data.get('extra_curricular', 0)),
-        'certification': int(form_data.get('certification', 0)),
+        'degree_names': safe_str(form_data.get('degree_names', 'Unknown')),
+        'languages': safe_str(form_data.get('language', 'Unknown')),
+        'major1_mapped': safe_str(form_data.get('major1_mapped', 'Unknown')),
+        'major2_mapped': safe_str(form_data.get('major2_mapped', 'Unknown')),
+        'job1': safe_str(form_data.get('job1', 'Unknown')),
+        'job2': safe_str(form_data.get('job2', 'Unknown')),
+        'job3': safe_str(form_data.get('job3', 'Unknown')),
+        'matched_score': safe_float(form_data.get('correlation', -1)),
+        'institution_count': safe_int(form_data.get('institution_count', -1)),
+        'max_passing_year': safe_int(form_data.get('max_passing_year', -1)),
+        'gpa': safe_float(form_data.get('gpa', -1)),
+        'min_experience_requirement': safe_int(form_data.get('experience', -1)),
+        'min_age_requirement': safe_int(form_data.get('age', -1)),
+        'extra_curricular': safe_int(form_data.get('extra_curricular', 0), 0),
+        'certification': safe_int(form_data.get('certification', 0), 0),
     }])
+
+    # profile_data_test = pd.DataFrame([{
+    #     'degree_names': 'Bachelor',
+    #     'languages': 'Unknown',
+    #     'major1_mapped': 'Unknown',
+    #     'major2_mapped': 'Unknown',
+    #     'job1': 'Unknown',
+    #     'job2': 'Unknown',
+    #     'job3': 'Unknown',
+    #     'matched_score': 1.0,
+    #     'institution_count': -1,
+    #     'max_passing_year': -1,
+    #     'gpa': -1.0,
+    #     'min_experience_requirement': -1,
+    #     'min_age_requirement': -1,
+    #     'extra_curricular': 0,
+    #     'certification': 0,
+    # }])
+
+    # test = pd.DataFrame([{'result': profile_data.equals(profile_data_test)}])
+
+    # test.to_csv('test.csv')
 
     # Step 2: Predict skills
     profile_data.fillna("Unknown", inplace=True)
