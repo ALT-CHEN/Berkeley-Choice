@@ -4,6 +4,10 @@ from models.skill_predictor import generate_course_recommendations
 import pandas as pd
 import os
 
+from flask_login import current_user
+from models.user import UserFormData  # assuming your new model is defined there
+from models import db
+
 recommendation_bp = Blueprint("recommendation", __name__)
 
 @recommendation_bp.route("/recommend", methods=["GET", "POST"])
@@ -22,6 +26,13 @@ def recommend():
     min_inst = int(df['institution_count'].min())
     max_inst = int(df['institution_count'].max())
 
+    form_data = {}
+
+    if current_user.is_authenticated:
+        saved_data = UserFormData.query.filter_by(user_id=current_user.id).first()
+        if saved_data:
+            form_data = saved_data.data
+
     if request.method == "POST":
         form_data = request.form.to_dict()
         resume_file = request.files.get('resume')
@@ -32,10 +43,20 @@ def recommend():
             resume_path = os.path.join(upload_dir, resume_file.filename)
             resume_file.save(resume_path)
 
-        session['form_data'] = form_data
-        session['resume_filename'] = resume_file.filename if resume_file else None
+        if current_user.is_authenticated:
+            user_form = UserFormData.query.filter_by(user_id=current_user.id).first()
+            if user_form:
+                user_form.data = form_data
+            else:
+                user_form = UserFormData(user_id=current_user.id, data=form_data)
+                db.session.add(user_form)
+            db.session.commit()
+        else:
+            session['form_data'] = form_data
 
+        session['resume_filename'] = resume_file.filename if resume_file else None
         return redirect(url_for('recommendation.result'))
+
 
     return render_template("recommend.html",
                            degree_options=degree_options,
@@ -46,7 +67,8 @@ def recommend():
                            job2_options=job2_options,
                            job3_options=job3_options,
                            min_inst=min_inst,
-                           max_inst=max_inst)
+                           max_inst=max_inst,
+                           form_data=form_data)
 
 @recommendation_bp.route("/recommend/result", methods=["GET"])
 def result():
@@ -88,11 +110,11 @@ def result():
     recommended_courses = full_courses.to_dict(orient="records")
 
     # Extract filter options
-    major_options = sorted(df["major"].dropna().unique())
-    grading_options = sorted(df["grading"].dropna().unique())
-    course_levels = sorted(df["course_level"].dropna().unique())
-    summer_options = sorted(df["summer_schedule"].dropna().unique())
-    unit_options = sorted(set(unit for units in df["course_units_parsed"] for unit in units))
+    major_options = sorted(full_courses["major"].dropna().unique())
+    grading_options = sorted(full_courses["grading"].dropna().unique())
+    course_levels = sorted(full_courses["course_level"].dropna().unique())
+    summer_options = sorted(full_courses["summer_schedule"].dropna().unique())
+    unit_options = sorted(set(unit for units in full_courses["course_units_parsed"] for unit in units))
 
     return render_template(
         "result.html",

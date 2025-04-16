@@ -232,177 +232,177 @@
 
 {% block body %}
 <div class="scroll-area">
-<div class="container my-5">
-  <div class="form-container">
-    <h2 class="text-center mb-4 form-title">Course Recommendation Form</h2>
-    <form method="POST" enctype="multipart/form-data" action="{{ url_for('recommendation.recommend') }}">
+  <div class="container my-5">
+    <div class="form-container">
+      <h2 class="text-center mb-4 form-title">Course Recommendation Form</h2>
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('recommendation.recommend') }}">
 
-      <!-- 🎓 Academics -->
-      <div class="form-section">
-        <h4 class="form-section-title">Academics</h4>
-        <div class="mb-3">
-          <label class="form-label">Degree <span class="text-danger">*</span></label>
-          <select class="form-select" name="degree_names" required>
-            <option value="">Select your degree</option>
-            {% for degree in degree_options %}
-              <option value="{{ degree }}">{{ degree }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">(Expected) Major 1 <span class="text-danger">*</span></label>
-          <select class="form-select" name="major1_mapped" required>
-            <option value="">Select your major</option>
-            {% for major in major1_options %}
-              <option value="{{ major }}">{{ major }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">(Expected) Major 2</label>
-          <select class="form-select" name="major2_mapped">
-            <option value="">Select your major</option>
-            {% for major in major2_options %}
-              <option value="{{ major }}">{{ major }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <label class="form-label">(Expected) GPA <span class="text-danger">*</span></label>
-            <input type="number" step="0.01" min="0" max="4.0" class="form-control" name="gpa" required>
+        <!-- 🎓 Academics -->
+        <div class="form-section">
+          <h4 class="form-section-title">Academics</h4>
+          <div class="mb-3">
+            <label class="form-label">Degree <span class="text-danger">*</span></label>
+            <select class="form-select" name="degree_names" required>
+              <option value="">Select your degree</option>
+              {% for degree in degree_options %}
+                <option value="{{ degree }}" {% if form_data.get('degree_names') == degree %}selected{% endif %}>{{ degree }}</option>
+              {% endfor %}
+            </select>
           </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Number of Institutions Attended <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" name="institution_count" min="0" required>
+
+          <div class="mb-3">
+            <label class="form-label">(Expected) Major 1 <span class="text-danger">*</span></label>
+            <select class="form-select" name="major1_mapped" required>
+              <option value="">Select your major</option>
+              {% for major in major1_options %}
+                <option value="{{ major }}" {% if form_data.get('major1_mapped') == major %}selected{% endif %}>{{ major }}</option>
+              {% endfor %}
+            </select>
           </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">(Expected) Year of Graduation <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" name="max_passing_year" min="1900" max="2100" required>
+
+          <div class="mb-3">
+            <label class="form-label">(Expected) Major 2</label>
+            <select class="form-select" name="major2_mapped">
+              <option value="">Select your major</option>
+              {% for major in major2_options %}
+                <option value="{{ major }}" {% if form_data.get('major2_mapped') == major %}selected{% endif %}>{{ major }}</option>
+              {% endfor %}
+            </select>
           </div>
-        </div>
-      </div>
 
-      <!-- 💼 Work Experience -->
-      <div class="form-section">
-        <h4 class="form-section-title">Work Experience</h4>
-        <div class="mb-3">
-          <label class="form-label">Years of Work Experience <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" name="experience" min="0" required>
-        </div>
-
-      <div class="mb-3">
-        <label class="form-label">(Expected) Job 1 <span class="text-danger">*</span></label>
-        <select class="form-select" name="job1" required>
-          <option value="">Select a job title</option>
-          {% for job in job1_options %}
-            <option value="{{ job }}">{{ job }}</option>
-          {% endfor %}
-        </select>
-      </div>
-    
-      <div class="mb-3">
-        <label class="form-label">(Expected) Job 2</label>
-        <select class="form-select" name="job2">
-          <option value="">Select a job title</option>
-          {% for job in job2_options %}
-            <option value="{{ job }}">{{ job }}</option>
-          {% endfor %}
-        </select>
-      </div>
-    
-      <div class="mb-3">
-        <label class="form-label">(Expected) Job 3</label>
-        <select class="form-select" name="job3">
-          <option value="">Select a job title</option>
-          {% for job in job3_options %}
-            <option value="{{ job }}">{{ job }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <!-- 🧍 Additional Info -->
-      <div class="form-section">
-        <h4 class="form-section-title">Additional Information</h4>
-        <div class="mb-3">
-          <label class="form-label">Age <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" name="age" min="0" max="120" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Extracurricular Activities</label>
-          <select class="form-select" name="extra_curricular">
-            <option value="">Select</option>
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Certifications</label>
-          <select class="form-select" name="certification">
-            <option value="">Select</option>
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Foreign Language</label>
-          <select class="form-select" name="language">
-            <option value="">Select a language</option>
-            {% for language in language_options %}
-              <option value="{{ language }}">{{ language }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <!-- 🎯 Recommendation Preference Slider -->
-      <div class="form-section">
-        <h4 class="form-section-title">Recommendation Preference</h4>
-        <div class="mb-3 text-white">
-          <label class="form-label mb-3 text-center d-block" style="font-weight: 500;">
-            How closely do you want your future jobs to align with your academic background? <span class="text-danger">*</span>
-          </label>
-
-          <div class="d-flex align-items-center gap-3">
-            <span style="min-width: 40px;">Low</span>
-            <input type="range" class="form-range flex-grow-1"
-                   id="correlation_slider" name="correlation"
-                   min="0" max="1" step="0.01" required>
-            <span style="min-width: 50px;">High</span>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">(Expected) GPA <span class="text-danger">*</span></label>
+              <input type="number" step="0.01" min="0" max="4.0" class="form-control" name="gpa" value="{{ form_data.get('gpa', '') }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Number of Institutions Attended <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" name="institution_count" min="0" value="{{ form_data.get('institution_count', '') }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">(Expected) Year of Graduation <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" name="max_passing_year" min="1900" max="2100" value="{{ form_data.get('max_passing_year', '') }}" required>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 📎 Resume Upload -->
-      <div class="form-section">
-        <h4 class="form-section-title">Resume Upload</h4>
-        <div class="mb-3">
-          <label class="form-label">Upload Resume (PDF)</label>
-          <input type="file" class="form-control" name="resume" accept="application/pdf">
+        <!-- 💼 Work Experience -->
+        <div class="form-section">
+          <h4 class="form-section-title">Work Experience</h4>
+          <div class="mb-3">
+            <label class="form-label">Years of Work Experience <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="experience" min="0" value="{{ form_data.get('experience', '') }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">(Expected) Job 1 <span class="text-danger">*</span></label>
+            <select class="form-select" name="job1" required>
+              <option value="">Select a job title</option>
+              {% for job in job1_options %}
+                <option value="{{ job }}" {% if form_data.get('job1') == job %}selected{% endif %}>{{ job }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">(Expected) Job 2</label>
+            <select class="form-select" name="job2">
+              <option value="">Select a job title</option>
+              {% for job in job2_options %}
+                <option value="{{ job }}" {% if form_data.get('job2') == job %}selected{% endif %}>{{ job }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">(Expected) Job 3</label>
+            <select class="form-select" name="job3">
+              <option value="">Select a job title</option>
+              {% for job in job3_options %}
+                <option value="{{ job }}" {% if form_data.get('job3') == job %}selected{% endif %}>{{ job }}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
 
-        <div class="form-check mb-3">
-          <input class="form-check-input" type="checkbox" name="agree" id="agree" required>
-          <label class="form-check-label" for="agree">
-            I agree to the <a href="#" id="openTerms">Terms and Conditions</a>
-            <span class="text-danger">*</span>
-          </label>
-        </div
+        <!-- 🧟 Additional Info -->
+        <div class="form-section">
+          <h4 class="form-section-title">Additional Information</h4>
+          <div class="mb-3">
+            <label class="form-label">Age <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="age" min="0" max="120" value="{{ form_data.get('age', '') }}" required>
+          </div>
 
-        
-        
+          <div class="mb-3">
+            <label class="form-label">Extracurricular Activities</label>
+            <select class="form-select" name="extra_curricular">
+              <option value="">Select</option>
+              <option value="1" {% if form_data.get('extra_curricular') == '1' %}selected{% endif %}>Yes</option>
+              <option value="0" {% if form_data.get('extra_curricular') == '0' %}selected{% endif %}>No</option>
+            </select>
+          </div>
 
-      <div class="text-center mt-4">
-        <button type="submit" class="btn-submit">Get Recommendation</button>
-      </div>
+          <div class="mb-3">
+            <label class="form-label">Certifications</label>
+            <select class="form-select" name="certification">
+              <option value="">Select</option>
+              <option value="1" {% if form_data.get('certification') == '1' %}selected{% endif %}>Yes</option>
+              <option value="0" {% if form_data.get('certification') == '0' %}selected{% endif %}>No</option>
+            </select>
+          </div>
 
-    </form>
+          <div class="mb-3">
+            <label class="form-label">Foreign Language</label>
+            <select class="form-select" name="language">
+              <option value="">Select a language</option>
+              {% for language in language_options %}
+                <option value="{{ language }}" {% if form_data.get('language') == language %}selected{% endif %}>{{ language }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!-- 🎯 Recommendation Preference Slider -->
+        <div class="form-section">
+          <h4 class="form-section-title">Recommendation Preference</h4>
+          <div class="mb-3 text-white">
+            <label class="form-label mb-3 text-center d-block" style="font-weight: 500;">
+              How closely do you want your future jobs to align with your academic background? <span class="text-danger">*</span>
+            </label>
+
+            <div class="d-flex align-items-center gap-3">
+              <span style="min-width: 40px;">Low</span>
+              <input type="range" class="form-range flex-grow-1"
+                     id="correlation_slider" name="correlation"
+                     min="0" max="1" step="0.01" value="{{ form_data.get('correlation', 0.5) }}" required>
+              <span style="min-width: 50px;">High</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📎 Resume Upload -->
+        <div class="form-section">
+          <h4 class="form-section-title">Resume Upload</h4>
+          <div class="mb-3">
+            <label class="form-label">Upload Resume (PDF)</label>
+            <input type="file" class="form-control" name="resume" accept="application/pdf">
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="agree" id="agree" required>
+            <label class="form-check-label" for="agree">
+              I agree to the <a href="#" id="openTerms">Terms and Conditions</a>
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn-submit">Get Recommendation</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
   </div>
 </div>
 </div>

@@ -23,7 +23,7 @@ def safe_str(val, default='Unknown'):
     else:
         return val
 
-def generate_course_recommendations(form_data, extracted_skills, n=20):
+def generate_course_recommendations(form_data, extracted_skills):
 
     raw_profile_df = pd.DataFrame([{
         'degree_names': safe_str(form_data.get('degree_names', 'Unknown')),
@@ -103,8 +103,8 @@ def generate_course_recommendations(form_data, extracted_skills, n=20):
     # Clean and normalize Course_Code
     merged["Course_Code"] = merged["Course_Code"].astype(str).str.strip().str.replace('\xa0', ' ', regex=False)
 
-    # Format, sort, and remove duplicates
-    top_recommendations = (
+    # Sort, drop duplicates, and retain up to 50
+    sorted_merged = (
         merged[[
             "Course_Code", "Course_Title", "Cluster", "skill_rank",
             "probability", "Cosine_Similarity", "predicted_score"
@@ -113,7 +113,20 @@ def generate_course_recommendations(form_data, extracted_skills, n=20):
         .drop_duplicates(subset="Course_Code", keep="first")
     )
 
-    # test_df = top_recommendations.head(n)
-    # test_df.to_csv('test1.csv')
+    # Step 1: Keep those above threshold (0.25)
+    top_filtered = sorted_merged[sorted_merged["predicted_score"] >= 0.25]
 
-    return top_recommendations.head(n)
+    # Step 2: Always return at least 20
+    if len(top_filtered) < 20:
+        additional_needed = 20 - len(top_filtered)
+        # Fill from remaining rows below 0.25
+        remaining = sorted_merged[~sorted_merged.index.isin(top_filtered.index)]
+        filler = remaining.head(additional_needed)
+        top_recommendations = pd.concat([top_filtered, filler])
+    else:
+        top_recommendations = top_filtered
+
+    # Step 3: Limit to maximum 50
+    # top_recommendations = top_recommendations.head(50)
+
+    return top_recommendations
