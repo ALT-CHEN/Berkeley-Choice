@@ -51,8 +51,8 @@ def recommend():
                 user_form = UserFormData(user_id=current_user.id, data=form_data)
                 db.session.add(user_form)
             db.session.commit()
-        else:
-            session['form_data'] = form_data
+
+        session['form_data'] = form_data
 
         session['resume_filename'] = resume_file.filename if resume_file else None
         return redirect(url_for('recommendation.result'))
