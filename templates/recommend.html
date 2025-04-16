@@ -136,6 +136,94 @@
   }
 
 </style>
+<style>
+  .custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .custom-modal-content {
+    background-color: #1a1a1a;
+    color: #facc15;
+    padding: 2rem;
+    border-radius: 14px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+    font-family: 'Inter', sans-serif;
+    position: relative;
+  }
+
+  .custom-modal-content h5 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #facc15;
+  }
+
+  .custom-modal-content ul {
+    padding-left: 1.2rem;
+  }
+
+  .custom-modal-content p {
+    color: #f1f1f1;
+  }
+
+  .modal-buttons {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .modal-buttons .btn {
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    margin: 0 0.5rem;
+    border: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-close-modal {
+    background-color: #444;
+    color: white;
+  }
+
+  .btn-close-modal:hover {
+    background-color: #666;
+  }
+
+  .btn-agree {
+    background-color: #facc15;
+    color: black;
+  }
+
+  .btn-agree:hover {
+    background-color: #ffe26b;
+  }
+
+  .close-modal-x {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    font-size: 1.5rem;
+    color: #facc15;
+    cursor: pointer;
+  }
+</style>
+
+
+
 {% endblock %}
 
 {% block title %}
@@ -153,8 +241,8 @@
       <div class="form-section">
         <h4 class="form-section-title">Academics</h4>
         <div class="mb-3">
-          <label class="form-label">Degree</label>
-          <select class="form-select" name="degree_names">
+          <label class="form-label">Degree <span class="text-danger">*</span></label>
+          <select class="form-select" name="degree_names" required>
             <option value="">Select your degree</option>
             {% for degree in degree_options %}
               <option value="{{ degree }}">{{ degree }}</option>
@@ -163,8 +251,8 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">(Expected) Major 1</label>
-          <select class="form-select" name="major1_mapped">
+          <label class="form-label">(Expected) Major 1 <span class="text-danger">*</span></label>
+          <select class="form-select" name="major1_mapped" required>
             <option value="">Select your major</option>
             {% for major in major1_options %}
               <option value="{{ major }}">{{ major }}</option>
@@ -184,16 +272,16 @@
 
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label class="form-label">(Expected) GPA</label>
-            <input type="number" step="0.01" min="0" max="4.0" class="form-control" name="gpa">
+            <label class="form-label">(Expected) GPA <span class="text-danger">*</span></label>
+            <input type="number" step="0.01" min="0" max="4.0" class="form-control" name="gpa" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">Number of Institutions Attended</label>
-            <input type="number" class="form-control" name="institution_count" min="0">
+            <label class="form-label">Number of Institutions Attended <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="institution_count" min="0" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">(Expected) Year of Graduation</label>
-            <input type="number" class="form-control" name="max_passing_year" min="1900" max="2100">
+            <label class="form-label">(Expected) Year of Graduation <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="max_passing_year" min="1900" max="2100" required>
           </div>
         </div>
       </div>
@@ -202,29 +290,46 @@
       <div class="form-section">
         <h4 class="form-section-title">Work Experience</h4>
         <div class="mb-3">
-          <label class="form-label">Years of Work Experience</label>
-          <input type="number" class="form-control" name="experience" min="0">
+          <label class="form-label">Years of Work Experience <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" name="experience" min="0" required>
         </div>
 
-        {% for job_label, job_list in [('job1', job1_options), ('job2', job2_options), ('job3', job3_options)] %}
-        <div class="mb-3">
-          <label class="form-label">(Expected) {{ job_label.replace('job', 'Job ') }}</label>
-          <select class="form-select" name="{{ job_label }}">
-            <option value="">Select a job title</option>
-            {% for job in job_list %}
-              <option value="{{ job }}">{{ job }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        {% endfor %}
+      <div class="mb-3">
+        <label class="form-label">(Expected) Job 1 <span class="text-danger">*</span></label>
+        <select class="form-select" name="job1" required>
+          <option value="">Select a job title</option>
+          {% for job in job1_options %}
+            <option value="{{ job }}">{{ job }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    
+      <div class="mb-3">
+        <label class="form-label">(Expected) Job 2</label>
+        <select class="form-select" name="job2">
+          <option value="">Select a job title</option>
+          {% for job in job2_options %}
+            <option value="{{ job }}">{{ job }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    
+      <div class="mb-3">
+        <label class="form-label">(Expected) Job 3</label>
+        <select class="form-select" name="job3">
+          <option value="">Select a job title</option>
+          {% for job in job3_options %}
+            <option value="{{ job }}">{{ job }}</option>
+          {% endfor %}
+        </select>
       </div>
 
       <!-- 🧍 Additional Info -->
       <div class="form-section">
         <h4 class="form-section-title">Additional Information</h4>
         <div class="mb-3">
-          <label class="form-label">Age</label>
-          <input type="number" class="form-control" name="age" min="0" max="120">
+          <label class="form-label">Age <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" name="age" min="0" max="120" required>
         </div>
 
         <div class="mb-3">
@@ -261,7 +366,7 @@
         <h4 class="form-section-title">Recommendation Preference</h4>
         <div class="mb-3 text-white">
           <label class="form-label mb-3 text-center d-block" style="font-weight: 500;">
-            How closely do you want your future jobs to align with your academic background?
+            How closely do you want your future jobs to align with your academic background? <span class="text-danger">*</span>
           </label>
 
           <div class="d-flex align-items-center gap-3">
@@ -283,10 +388,15 @@
         </div>
 
         <div class="form-check mb-3">
-          <input class="form-check-input" type="checkbox" name="agree" required>
-          <label class="form-check-label">I agree to the terms and conditions</label>
-        </div>
-      </div>
+          <input class="form-check-input" type="checkbox" name="agree" id="agree" required>
+          <label class="form-check-label" for="agree">
+            I agree to the <a href="#" id="openTerms">Terms and Conditions</a>
+            <span class="text-danger">*</span>
+          </label>
+        </div
+
+        
+        
 
       <div class="text-center mt-4">
         <button type="submit" class="btn-submit">Get Recommendation</button>
@@ -296,5 +406,61 @@
   </div>
 </div>
 </div>
+<!-- Custom Modal -->
+<div id="customTermsModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <span class="close-modal-x" id="closeTermsX">&times;</span>
+    <h5>Terms and Conditions</h5>
+    <p>By submitting this form, you agree to the following:</p>
+    <ul>
+      <li>Your data will only be used for generating course recommendations.</li>
+      <li>No personal data is permanently stored or shared.</li>
+      <li>Recommendations are AI-generated and not formal academic advice.</li>
+      <li>Your resume is processed temporarily for analysis only.</li>
+      <li>Anonymized data may be used for improving the system.</li>
+    </ul>
+    <p>If you disagree, do not submit the form.</p>
+    <div class="modal-buttons">
+      <button type="button" class="btn btn-close-modal" id="closeTermsBtn">Close</button>
+      <button type="button" class="btn btn-agree" id="agreeTermsBtn">I Agree</button>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("customTermsModal");
+    const openBtn = document.getElementById("openTerms");
+    const closeX = document.getElementById("closeTermsX");
+    const closeBtn = document.getElementById("closeTermsBtn");
+    const agreeBtn = document.getElementById("agreeTermsBtn");
+    const checkbox = document.getElementById("agree");
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    openBtn.onclick = function (e) {
+      e.preventDefault();
+      modal.style.display = "flex";
+    };
+
+    closeX.onclick = closeBtn.onclick = function () {
+      closeModal();
+    };
+
+    agreeBtn.onclick = function () {
+      checkbox.checked = true;
+      closeModal();
+    };
+
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+  });
+</script>
+
+
 {% endblock %}
 
