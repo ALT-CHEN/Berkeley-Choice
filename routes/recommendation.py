@@ -32,12 +32,19 @@ recommendation_bp = Blueprint("recommendation", __name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 use4_path = os.path.join(BASE_DIR, 'models', 'use4')
+hub_cache_dir = os.path.join(BASE_DIR, 'models', 'tfhub_cache')
+
+# Set the TFHub cache directory under models/
+os.environ['TFHUB_CACHE_DIR'] = hub_cache_dir
+
+# Ensure the cache directory exists
+os.makedirs(hub_cache_dir, exist_ok=True)
 
 if not os.path.exists(use4_path):
     print("USE4 model not found locally. Downloading from TensorFlow Hub...")
     embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     
-    # Optional: Save it for future use
+    # Save model locally for explicit future loads
     tf.saved_model.save(embed, use4_path)
     print(f"Model saved to {use4_path}")
 else:
