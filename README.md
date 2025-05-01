@@ -72,7 +72,7 @@ A **Flask-based web application** that recommends courses tailored to user profi
 ## 🔧 Installation and Setup
 ### 1️⃣ Clone the Repository
 ```sh
-git clone https://github.com/<username>/Berkeley-Choice.git
+git clone https://github.com/ALT-CHEN/Berkeley-Choice.git
 cd Berkeley-Choice
 ```
 
