@@ -25,9 +25,9 @@ A **Flask-based web application** that recommends courses tailored to user profi
 
 | Page            | Description                                                         |
 |-----------------|---------------------------------------------------------------------|
-| 🏠 **Home**       | Introduction to the project and team                               |
-| 📈 **About**      | Interactive data dashboard for resume and course datasets          |
-| 🎯 **Recommend**  | Multi-step form to predict skills and display course suggestions   |
+| 🏠 **Home**       | Main Page                                                          |
+| 📈 **About**      | Introduction to project                                            |
+| 🎯 **Recommend**  | Multi-section form to predict skills and display course suggestions   |
 | 📞 **Contact**    | Contact form and team contact info                                 |
 
 ---
