@@ -10,16 +10,12 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def extract_skills_from_resume(pdf_path, threshold=1):
-    # EMSI API credentials from environment variables or config
-    client_id = os.getenv("EMSI_CLIENT_ID")
-    client_secret = os.getenv("EMSI_CLIENT_SECRET")
-
     auth_url = "https://auth.emsicloud.com/connect/token"
     skills_url = "https://emsiservices.com/skills/versions/latest/extract"
 
     auth_payload = {
-        "client_id": client_id,
-        "client_secret": client_secret,
+        "client_id": "clnfgumwhov7q9ej",
+        "client_secret": "hHIqZ2kn",
         "grant_type": "client_credentials",
         "scope": "emsi_open"
     }

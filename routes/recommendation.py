@@ -3,12 +3,46 @@ from models.rse import extract_skills_from_resume
 from models.skill_predictor import generate_course_recommendations
 import pandas as pd
 import os
+import tensorflow_hub as hub
+import tensorflow as tf
 
 from flask_login import current_user
 from models.user import UserFormData  # assuming your new model is defined there
 from models import db
 
+import numpy as np
+
+def get_similarity(course, skills, embed):
+    """
+    course: str (course description)
+    skills: list of str (skill set)
+    embed: loaded USE model
+    """
+    course_emb = embed([course])[0].numpy()
+    skills_emb = embed(skills).numpy()
+    avg_skill_emb = np.mean(skills_emb, axis=0)
+    similarity = np.dot(course_emb, avg_skill_emb) / (np.linalg.norm(course_emb) * np.linalg.norm(avg_skill_emb))
+    return similarity
+
 recommendation_bp = Blueprint("recommendation", __name__)
+
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# use4_path = os.path.join(BASE_DIR, 'models', 'use4')
+# embed = hub.load(use4_path)
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+use4_path = os.path.join(BASE_DIR, 'models', 'use4')
+
+if not os.path.exists(use4_path):
+    print("USE4 model not found locally. Downloading from TensorFlow Hub...")
+    embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    
+    # Optional: Save it for future use
+    tf.saved_model.save(embed, use4_path)
+    print(f"Model saved to {use4_path}")
+else:
+    embed = hub.load(use4_path)
+
 
 @recommendation_bp.route("/recommend", methods=["GET", "POST"])
 def recommend():
@@ -73,17 +107,10 @@ def recommend():
 @recommendation_bp.route("/recommend/result", methods=["GET"])
 def result():
     form_data = session.get('form_data', {})
-    resume_filename = session.get('resume_filename', '')
+    resume_filename = session.get('resume_filename')
 
     extracted_skills = []
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    if resume_filename:
-        resume_path = os.path.join(BASE_DIR, 'uploads', resume_filename)
-        if os.path.exists(resume_path):
-            _, extracted_skills = extract_skills_from_resume(resume_path)
-        else:
-            extracted_skills = ["⚠️ Resume file not found."]
 
     # --- NEW: Generate course recommendations ---
     recommended_df = generate_course_recommendations(form_data, extracted_skills)
@@ -96,6 +123,12 @@ def result():
     df = pd.read_csv(csv_path)
     df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
+    desc_path = os.path.join(BASE_DIR, 'data', 'Course_Description.csv')
+    desc_df = pd.read_csv(desc_path)
+    desc_df.columns = desc_df.columns.str.strip().str.lower().str.replace(" ", "_")
+    desc_df['course_code'] = desc_df['course_code'].astype(str).str.replace('\xa0', ' ').str.strip()
+
+
     # Parse course_units_parsed column safely
     import ast
     df["course_units_parsed"] = df["course_units_parsed"].apply(lambda x: ast.literal_eval(x) if pd.notnull(x) else [])
@@ -103,6 +136,22 @@ def result():
     # 🔗 Merge recommended course codes with full course info
     full_courses = recommended_df.merge(df, on="course_code", how="left")
     full_courses = full_courses.drop_duplicates(subset="Course_Code", keep="first")
+
+    full_courses = full_courses.merge(desc_df[['course_code', 'description']], on="course_code", how="left")
+
+    if resume_filename:
+        # print('resume')
+        resume_path = os.path.join(BASE_DIR, 'uploads', resume_filename)
+        if os.path.exists(resume_path):
+            code, extracted_skills = extract_skills_from_resume(resume_path)
+            if code == 200:
+                full_courses['skill_similarity'] = full_courses['description'].apply(
+                    lambda desc: get_similarity(desc, extracted_skills, embed)
+                )
+                full_courses.drop(columns=['description'], inplace=True)
+        else:
+            extracted_skills = ["⚠️ Resume file not found."]
+
 
     # full_courses.to_csv('test.csv')
 
