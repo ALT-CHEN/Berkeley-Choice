@@ -117,8 +117,8 @@
         <!-- Row 1: 2 Members -->
         <div class="d-flex justify-content-evenly w-100 mb-5">
           {% for member in [
-            {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'huei.jpg', 'email': 'daniel.berkeley@gmail.com'},
-            {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'alice.berkeley@gmail.com'}
+            {'name': 'Huei-Sin Liu', 'role': 'Data Scientist', 'img': 'huei.jpg', 'email': 'huei@berkeley.edu'},
+            {'name': 'Zixuan Li', 'role': 'UX Designer', 'img': 'zixuan_li.jpg', 'email': 'sherrylzx@berkeley.edu'}
           ] %}
           <div class="card text-center p-3" style="width: 220px;">
             <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"
@@ -137,9 +137,9 @@
         <!-- Row 2: 3 Members -->
         <div class="d-flex justify-content-evenly w-100" style="column-gap: 5rem;">
           {% for member in [
-            {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'chenyang_wang.jpg', 'email': 'brian.berkeley@gmail.com'},
-            {'name': 'Anzhou Wang', 'role': 'Project Lead', 'img': 'anzhou_wang.jpg', 'email': 'catherine.berkeley@gmail.com'},
-            {'name': 'Linzhe Wu', 'role': 'AI/ML Engineer', 'img': 'linzhe_wu.jpg', 'email': 'emily.berkeley@gmail.com'}
+            {'name': 'Chenyang Wang', 'role': 'Frontend Developer', 'img': 'chenyang_wang.jpg', 'email': 'chenyang_wang@berkeley.edu'},
+            {'name': 'Anzhou Wang', 'role': 'Project Lead', 'img': 'anzhou_wang.jpg', 'email': 'anzhou_wang@berkeley.edu'},
+            {'name': 'Linzhe Wu', 'role': 'AI/ML Engineer', 'img': 'linzhe_wu.jpg', 'email': 'linzhe_wu@berkeley.edu'}
           ] %}
           <div class="card text-center p-3" style="width: 220px;">
             <img src="{{ url_for('static', filename='images/team/' ~ member.img) }}"

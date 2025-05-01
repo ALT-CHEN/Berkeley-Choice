@@ -3,43 +3,65 @@
 
 {% block body %}
 <style>
-  .section-panel {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    color: #f3f4f6;
   }
 
-  .section-panel:hover {
-    background-color: rgba(255, 255, 255, 0.07);
-    transform: scale(1.01);
+  .section-panel {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 12px rgba(255, 255, 0, 0.1);
+    margin-bottom: 2rem;
   }
 
   .section-title {
-    font-size: 1.8rem;
-    color: #facc15;
+    font-size: 2rem;
     font-weight: bold;
+    color: #fde047;
     margin-bottom: 1rem;
   }
 
   .section-subtitle {
-    font-size: 1.1rem;
-    color: #ffffffcc;
+    font-size: 1.25rem;
+    color: #d1d5db;
     margin-bottom: 1.5rem;
   }
 
-  .section-panel ul {
-    list-style: none;
-    padding-left: 0;
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
   }
 
-  .section-panel li::before {
-    content: "✔️";
-    margin-right: 0.5rem;
-    color: #facc15;
+  .pipeline-block {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.05);
+  }
+
+  .pipeline-block:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.15);
+    transform: translateY(-3px);
+  }
+
+  .block-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fde047;
+    margin-bottom: 0.75rem;
+  }
+
+  .block-text {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: #e5e7eb;
   }
 
   .btn-glow {
@@ -60,54 +82,106 @@
 </style>
 
 <div class="scroll-area">
-<div class="container py-5">
-  <!-- Logo + Intro -->
-  <div class="text-center mb-5">
-    <img src="/static/images/logo.png" alt="Berkeley Choice Logo" style="max-height: 160px;">
-    <h1 class="text-white mt-3">Berkeley Choice</h1>
-    <p class="text-white-50 fs-5">An AI-powered course recommendation system tailored to each UC Berkeley student’s academic profile and career goals.</p>
-  </div>
+  <div class="container py-5">
 
-  <!-- Problem & Purpose -->
-  <div class="section-panel">
-    <div class="section-title">🎯 Why We Built This</div>
-    <p class="section-subtitle">
-      Choosing the right courses is challenging. With thousands of options and ever-evolving career demands, students often lack guidance on which classes will truly support their future.
-      <strong>Berkeley Choice bridges this gap through intelligent, skill-based recommendations personalized for every student.</strong>
-    </p>
-  </div>
+    <!-- Logo + Intro -->
+    <div class="text-center mb-5">
+      <img src="/static/images/logo.png" alt="Berkeley Choice Logo" style="max-height: 160px;">
+      <h1 class="text-white mt-3">Berkeley Choice</h1>
+      <p class="text-white-50 fs-5">
+        An AI-powered course recommendation system tailored to each UC Berkeley student’s academic profile and career goals.
+      </p>
+    </div>
 
-  <!-- 🚀 Project Pipeline -->
-  <div class="section-panel">
-    <div class="section-title">🚀 Our AI-Driven Recommendation Pipeline</div>
-    <p class="section-subtitle">Here’s how we turn student data into precise, personalized course recommendations:</p>
-    <ul>
-      <li><strong>Skill Clustering:</strong> We analyzed 10,000+ raw skills from industry/job data and grouped them into ~800 skill clusters using advanced clustering algorithms. These clusters form a universal skill vocabulary for mapping job roles.</li>
-      <li><strong>Neural Skill Prediction:</strong> A neural network trained on 10,000+ successful UC Berkeley student profiles predicts the most relevant skill clusters based on a student's academic background, past experience, and career aspirations — achieving over <strong>90% accuracy</strong> and <strong>high F1-scores</strong>.</li>
-      <li><strong>Semantic Matching via Sentence-BERT:</strong> Skill clusters and course descriptions are embedded using a fine-tuned Sentence-BERT model under a semi-supervised learning framework, enabling deep understanding of course relevance.</li>
-      <li><strong>Personalized Course Matching:</strong> Each student’s skill profile is compared against 10,000+ UC Berkeley courses to identify the <strong>top matches</strong>, providing transparent, data-driven suggestions tailored just for them.</li>
-    </ul>
-  </div>
+    <!-- Problem & Purpose -->
+    <div class="section-panel">
+      <div class="section-title">Why We Built This</div>
+      <p class="section-subtitle">
+        Choosing the right courses is challenging. With thousands of options and ever-evolving career demands, students often lack guidance on which classes will truly support their future.
+        <strong>Berkeley Choice bridges this gap through intelligent, skill-based recommendations personalized for every student.</strong>
+      </p>
+    </div>
 
-  <!-- Unique Value -->
-  <div class="section-panel">
-    <div class="section-title">🎯 What Makes Us Different?</div>
-    <ul>
-      <li>🔬 <strong>Personalized Recommendations:</strong> No two students are treated the same. Your unique goals and background shape your results.</li>
-      <li>📊 <strong>Data-Driven Insights:</strong> We use real alumni success profiles to guide and validate every recommendation.</li>
-      <li>💬 <strong>Explainable Matches:</strong> Each course includes the reason it's recommended — so you know how it supports your skills and goals.</li>
-    </ul>
-  </div>
+    <!-- AI Recommendation Pipeline -->
+    <div class="section-panel">
+      <div class="section-title">Our AI-Driven Recommendation Pipeline</div>
+      <p class="section-subtitle">
+        A step-by-step transformation of student data into personalized course recommendations.
+      </p>
 
-  <!-- Future Direction -->
-  <div class="section-panel">
-    <div class="section-title">🔧 What’s Next?</div>
-    <p class="section-subtitle">
-      We’re expanding to more universities and refining our models to include real-time job market insights and employer demand. Our mission is to empower every student with data-backed academic decisions.
-    </p>
-    <a href="/contact" class="btn btn-glow mt-3">Partner with Us</a>
+      <div class="pipeline-grid">
+        <div class="pipeline-block">
+          <h5 class="block-title">Profile Collection</h5>
+          <p class="block-text">
+            We curated over <strong>10,000+</strong> real student profiles from open datasets, capturing academic records, personal experiences, and career ambitions to form the foundation of our system.
+          </p>
+        </div>
+
+        <div class="pipeline-block">
+          <h5 class="block-title">Skill Clustering</h5>
+          <p class="block-text">
+            Using <strong>HDBSCAN</strong>, we clustered thousands of raw skills into <strong>500+ target skillsets</strong>, ensuring a clean and structured vocabulary across student and job data.
+          </p>
+        </div>
+
+        <div class="pipeline-block">
+          <h5 class="block-title">Neural Skill Prediction</h5>
+          <p class="block-text">
+            A multi-layer perceptron (MLP) model analyzes academic and personal data to predict relevant skill clusters, identifying potential gaps and opportunities tailored to each student.
+          </p>
+        </div>
+
+        <div class="pipeline-block">
+          <h5 class="block-title">Course Dataset Aggregation</h5>
+          <p class="block-text">
+            We scraped and processed <strong>10,000+</strong> UC Berkeley course descriptions, combining them with job listings and student resumes for deep semantic enrichment.
+          </p>
+        </div>
+
+        <div class="pipeline-block">
+          <h5 class="block-title">Semantic Skill-Course Labeling</h5>
+          <p class="block-text">
+            A custom <strong>Word2Vec</strong> model was trained on a combination of resumes, job posts, and course descriptions. It generated match scores to label skill-course pairs.
+          </p>
+        </div>
+
+        <div class="pipeline-block">
+          <h5 class="block-title">Sentence-BERT Fine-Tuning</h5>
+          <p class="block-text">
+            We fine-tuned <strong>Sentence-BERT</strong> on 20,000+ labeled skill–course examples using cosine similarity loss, resulting in highly contextual embeddings for recommendation.
+          </p>
+        </div>
+
+        <div class="pipeline-block">
+          <h5 class="block-title">Personalized Recommendation Engine</h5>
+          <p class="block-text">
+            Given a student profile, our NLP engine matches predicted skills to course descriptions. If a resume is uploaded, we extract known skills and compute a <strong>skill-fit score</strong> showing alignment with each course.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unique Value -->
+    <div class="section-panel">
+      <div class="section-title">What Makes Us Different?</div>
+      <p class="section-subtitle">
+        Berkeley Choice is not just another recommendation engine — it’s a transparent, skill-aligned platform designed for students' success.
+      </p>
+      <ul style="font-size: 1.1rem; color: #e5e7eb;">
+        <li><strong>Personalized:</strong> Every recommendation is tailored to your goals and background.</li>
+        <li><strong>Data-Driven:</strong> Grounded in real student success stories and outcome data.</li>
+        <li><strong>Explainable:</strong> Understand why each course is recommended — no black boxes.</li>
+      </ul>
+    </div>
+
+    <!-- Future Direction -->
+    <div class="section-panel">
+      <div class="section-title">What’s Next?</div>
+      <p class="section-subtitle">
+        We’re expanding to more universities and refining our models to include real-time job market insights and employer demand. Our mission is to empower every student with data-backed academic decisions.
+      </p>
+      <a href="/contact" class="btn btn-glow mt-3">Partner with Us</a>
+    </div>
   </div>
 </div>
-</div>
-
 {% endblock %}
