@@ -1,20 +1,38 @@
-# Course Recommendation System
+# 🎓 Course Recommendation System
 
-A Flask-based web application that recommends courses based on user profiles and predicted skills. This project leverages Neural Networks, Natural Language Processing (NLP), and Clustering techniques to build collaborative recommendation models. The web application is developed using Flask, offering a streamlined interface for users to receive personalized course suggestions.
+A **Flask-based web application** that recommends courses tailored to user profiles using **Neural Networks**, **Natural Language Processing (NLP)**, and **Clustering**. This project provides personalized course suggestions by extracting relevant skills and matching them with course descriptions through semantic similarity.
 
----
-
-## Features
-- **Home Page**: Introduction to the project and team members.
-- **About Page**: Interactive dashboard for visualizing course and resume datasets.
-- **Recommendation Page**: A form where users enter details, and the system predicts required skills and recommends courses.
-- **Contact Page**: Meet our team and contact our department.
-- **Database**: User Info Storage - memorize the last submission
-- **Modular Flask Architecture** using Blueprints for scalability.
+<p align="center">
+  <img src="https://img.shields.io/badge/Framework-Flask-blue?logo=flask" />
+  <img src="https://img.shields.io/badge/Language-Python-yellow?logo=python" />
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" />
+  <img src="https://img.shields.io/github/last-commit/your-username/Berkeley-Choice" />
+</p>
 
 ---
 
-## 📂 Project Structure (keep growing...)
+## ✨ Features
+
+- 🧠 **Skill Prediction** — Predict skills from user inputs using trained ML models.
+- 📚 **NLP Matching** — Match predicted skills with courses using Sentence-BERT and similarity scores.
+- 🧩 **Modular Architecture** — Flask Blueprints enable easy scaling and maintenance.
+- 💾 **Form Memory** — Last submission is remembered for logged-in users.
+- 🧑‍💻 **User-Friendly Interface** — Clean and modern frontend for ease of use.
+
+---
+
+## 🌐 Pages Overview
+
+| Page            | Description                                                         |
+|-----------------|---------------------------------------------------------------------|
+| 🏠 **Home**       | Introduction to the project and team                               |
+| 📈 **About**      | Interactive data dashboard for resume and course datasets          |
+| 🎯 **Recommend**  | Multi-step form to predict skills and display course suggestions   |
+| 📞 **Contact**    | Contact form and team contact info                                 |
+
+---
+
+## 📁 Project Structure
 ```
 /course_recommendation/
 │── app.py                                   # Main Flask application
