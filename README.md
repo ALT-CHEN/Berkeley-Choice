@@ -6,7 +6,7 @@ A **Flask-based web application** that recommends courses tailored to user profi
   <img src="https://img.shields.io/badge/Framework-Flask-blue?logo=flask" />
   <img src="https://img.shields.io/badge/Language-Python-yellow?logo=python" />
   <img src="https://img.shields.io/badge/License-MIT-green.svg" />
-  <img src="https://img.shields.io/github/last-commit/your-username/Berkeley-Choice" />
+  <img src="https://img.shields.io/github/last-commit/ALT-CHEN/Berkeley-Choice" />
 </p>
 
 ---
